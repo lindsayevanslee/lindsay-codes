@@ -6,6 +6,7 @@ website:
   title: "lindsay.codes"
   site-url: "https://lindsay.codes"
   description: "Lindsay Lee's techy blog"
+  favicon: "favicon.png"
   navbar:
     right:
       - about.qmd
