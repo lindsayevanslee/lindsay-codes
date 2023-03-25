@@ -1,0 +1,27 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "lindsay.codes"
+  site-url: "https://lindsay.codes"
+  description: "Lindsay Lee's techy blog"
+  navbar:
+    right:
+      - about.qmd
+      - icon: link
+        href: https://lindsayevanslee.com
+      - icon: linkedin
+        href: https://linkedin.com/in/lindsayevanslee
+      - icon: github
+        href: https://github.com/lindsayevanslee
+      - icon: twitter
+        href: https://twitter.com/lindsayevanslee
+
+format:
+  html:
+    theme: solar
+    css: styles.css
+
+editor: visual
+

@@ -1,0 +1,7 @@
+---
+title: "First post test"
+date: "2023-03-25"
+categories: [test]
+---
+
+Test first post

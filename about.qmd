@@ -1,0 +1,23 @@
+---
+title: "About"
+image: https://images.squarespace-cdn.com/content/v1/537e153fe4b02338db810244/1575885929838-7QX49BWV21TGZ686OEDQ/lee+lindsay.jpeg?format=750w
+about:
+  template: solana
+  links:
+    - icon: link
+      text: Website
+      href: https://lindsayevanslee.com
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/in/lindsayevanslee
+    - icon: github
+      text: Github
+      href: https://github.com/lindsayevanslee
+    - icon: twitter
+      text: Twitter
+      href: https://twitter.com/lindsayevanslee
+---
+
+This blog acts as a Joycean stream-of-consciousness record of the random tech-y things I'm experimenting with and learning. The purpose is to prevent things falling out of my goldfish brain. If you're reading this, I hope it benefits you too, though there's certainly no guarantee.
+
+Please visit my website or LinkedIn for a slightly more professional persona.
