@@ -1,0 +1,91 @@
+---
+title: "Designing a custom font (with emojis)"
+description: "Inspired by my sister’s awesome PhD work in Medieval French, I have been playing around with designing a custom font."
+date: "2023-03-26"
+image: winkingFace.png
+categories: [fonts]
+---
+
+Inspired by my [sister](https://twitter.com/loren325)'s awesome PhD work in Medieval French, I have been playing around with designing a custom font. My latest experimentation is in this [font-test GitHub repo](https://github.com/lindsayevanslee/font-test) and is published to an accompanying GitHub pages site, which you can see here:
+
+```{=html}
+<iframe width="780" height="500" src="https://lindsayevanslee.github.io/font-test/font-test.html" title="Font test"></iframe>
+```
+## Software
+
+I am using [Glyphs 3](https://glyphsapp.com) for creating this font. Glyphs is a proprietary font design program for Mac that seems to be one of the most popular ones. They have student pricing and also a "mini" version that isn't as expensive. I think you could do basically everything I have done so far with the mini version, except for the emojis.
+
+I am using [Flow](https://moleskinestudio.com/support/flow/introduction/flow-overview/) for sketching glyphs.
+
+## Some references that helped me
+
+Glyphs has some pretty good documentation, and there are also some good videos on YouTube to help you get started:
+
+-   [Drawing good paths](https://glyphsapp.com/learn/drawing-good-paths)
+-   [DanielNisbet on Youtube](https://www.youtube.com/@DanielNisbet)
+-   [Creating an Apple color font](https://glyphsapp.com/learn/creating-an-apple-color-font)
+-   [Vertical metrics](https://glyphsapp.com/learn/vertical-metrics)
+
+
+## Steps
+
+### Getting started
+
+1.  Create new font in Glyphs
+2.  Set parameters under Font Info: Units per Em, Ascender, Descender, etc
+
+### Lower case letters
+
+1.  Make new components to share between glyphs by creating new glyphs with names starting with \_
+2.  Draw the letters, and right click to add components
+
+### Upper case letters
+
+1.  Set custom Exports parameters:
+
+-   Disable Subroutines (on): needed because the capitals are very complicated
+
+2.  Copy sketches into glyph, and set size
+3.  Use "Trace Image" plugin to trace the image
+4.  Clean up
+5.  Delete image
+
+### Emojis
+
+1.  Set custom Font parameters:
+
+-   Use Typo Metrics (on)
+
+2.  Set custom Masters parameters:
+
+-   hheaAscender, hheaDescender, hheaLineGap: needed to avoid clipping
+
+3.  Set custom Export parameters:
+
+-   Export sbix Table: needed for emojis to render
+-   SBIX to SVG: needed to increase support for color font
+
+4.  Create new glyph called "\_emoji_origin", set width to be the same as the UPM for the font, and put small path in the bottom left corner where the emoji's bottom left corner will be anchored
+5.  Create new glyph with the emoji needed (either generate from glyph list or add directly by using the exact name or unicode)
+6.  Add component \_emoji_origin to emoji and decompose
+7.  Prepare image files for emoji:
+
+-   Original image should be square png with transparent background
+-   Create a copies of images with different resolutions. For example set first image as resolution 512, with a height and width that works when you paste image into the glyph. Next image should have half resolution (256) and half height and width
+-   Set names of files as all "glyphname resolution.png", eg "slightlySmilingFace 512.png"
+
+8.  Use script Add sbix Images to Font to batch-import your emoji images
+
+-   This is a mekkablue script that can be added from Plugin Manager -\> Scripts
+-   If it doesn't work, you can read error messages by opening the Macro Panel
+
+## Next steps
+
+- Make the font more cohesive
+- Draw better
+- Make more emojis
+- Figure out something cool to do with this
+
+
+
+

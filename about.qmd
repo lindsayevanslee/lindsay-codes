@@ -18,6 +18,6 @@ about:
       href: https://twitter.com/lindsayevanslee
 ---
 
-This blog acts as a Joycean stream-of-consciousness record of the random tech-y things I'm experimenting with and learning. The purpose is to prevent things falling out of my goldfish brain. If you're reading this, I hope it benefits you too, though there's certainly no guarantee.
+This blog acts as a Joycean stream-of-consciousness record of the random tech-y things I'm experimenting with and learning. It started because I bought this domain name on a whim and thought it was too cool to not do something with. The purpose is to prevent things falling out of my goldfish brain. If you're reading this, I hope it benefits you too, though there's certainly no guarantee.
 
 Please visit my website or LinkedIn for a slightly more professional persona.
