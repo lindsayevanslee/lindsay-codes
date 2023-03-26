@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/power-bi-custom-map/index.html",
       "/posts/font-design/index.html",
       "/posts/webscraping-screenshots/index.html",
       "/posts/gabfest-interruptions/index.html"
