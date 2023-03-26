@@ -1,0 +1,99 @@
+---
+title: "Webscraping screenshots with Selenium"
+description: "No more repetitive copy-pasting!"
+date: "2023-03-26"
+image: 14-day-case-rate-per-100000-pop_2022-09-10.png
+image-alt: "Screenshot of a heatmap of Shelby County, TN 14-day COVID-19 case rate"
+categories: [webscraping, python]
+jupyter: python3
+---
+
+My team at work maintained a dashboard related to COVID-19 that included screenshots of graphs online that needed to be updated daily. I had recently taken a little [LinkedIn Learning course called Web Scraping with Python](https://www.linkedin.com/learning/web-scraping-with-python) and thought this could be a cool opportunity to try that out. The course doesn't really talk about webscraping screenshots, but it helped give me some of the foundational knowledge and vocabulary.
+
+After a lot of trial and error, here is an small script I came up with. This script cycles through a python dictionary of directions to specific locations, captures the screenshot, and saves it. One element of the dictionary contains the URL where the screenshot is, an XPATH direction to the location of the screenshot on the page, the frame number, and the name of the file that it should be saved to. The [XPATH](https://developer.mozilla.org/en-US/docs/Web/XPath) may give you a list of multiple web elements (or "frames"), so the frame number is needed to tell the program which element of that list to save. 
+
+This script doesn't work exactly anymore, because these web pages have changed. That's one major drawback: it's very unstable and sensitive to change. And because of that, we didn't end up implementing this at work. But this same script structure could be used for different purposes in the future.
+
+
+```{python}
+#| eval: false
+
+##import packages -----------
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from time import sleep
+from datetime import date
+
+
+## set up --------
+
+#open driver
+driver = webdriver.Safari()
+
+#create function to see full page
+S = lambda X: driver.execute_script('return document.body.parentNode.scroll'+X)
+
+#get today's date
+today = date.today().strftime("%Y-%m-%d")
+
+#dictionary of screenshots to capture
+dict_urls = [
+    {
+        "id": 1, 
+        "url": 'https://insight.livestories.com/s/v2/1-2-case-counts/c4f65175-2433-47b7-b112-d62cf719af71',
+        "xpath": "//main//iframe",
+        "frame_number": 11,
+        "filename": 'weekly-covid-19-test-positivity-rate'
+    },
+        {
+        "id": 2, 
+        "url": 'https://insight.livestories.com/s/v2/1-4-geographic-data/6bb3072d-e622-4b84-9555-7b0ef390b354',
+        "xpath": "//main//iframe",
+        "frame_number": 0,
+        "filename": '14-day-testing-rate-per-100000-pop'
+    },
+        {
+        "id": 3, 
+        "url": 'https://insight.livestories.com/s/v2/1-4-geographic-data/6bb3072d-e622-4b84-9555-7b0ef390b354',
+        "xpath": "//main//iframe",
+        "frame_number": 1,
+        "filename": '14-day-case-rate-per-100000-pop'
+    },
+        {
+        "id": 4, 
+        "url": 'https://insight-editor.livestories.com/s/v2/1.1-data-dashboard/5d1c9c7a-1eb4-4e9c-82ab-efeaa6258cad',
+        "xpath": "//div[contains(@class, 'css-1bedmrb') and contains(@class, 'erxya8v2')]/div[contains(@class, 'css-rpv578') and contains(@class, 'ezdhjma0')]",
+        "frame_number": 9,
+        "filename": 'hrts'
+    }
+    ]
+
+
+## screenshots ------------------------
+
+## loop through dictionary of screenshots
+for i in range(len(dict_urls)):
+    #go to URL
+    driver.get(url = dict_urls[i]['url'])
+    sleep(3)
+
+    #set window size to full page
+    driver.set_window_size(S('Width'),S('Height')) # May need manual adjustment   
+    sleep(3)
+
+    #find set of frames
+    myframe = driver.find_elements(By.XPATH, dict_urls[i]['xpath'])
+
+    #print needed figure
+    myframe[dict_urls[i]['frame_number']].screenshot(dict_urls[i]['filename'] + "_" + today + '.png')
+
+## close driver ----------------------------------
+driver.quit()
+print("end...")
+
+```
+
+
+
+
+
