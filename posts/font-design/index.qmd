@@ -3,6 +3,7 @@ title: "Designing a custom font (with emojis)"
 description: "Inspired by my sister’s awesome PhD work in Medieval French, I have been playing around with designing a custom font."
 date: "2023-03-26"
 image: winkingFace.png
+image-alt: "Winking emoji in a medieval style, hand drawn by the author"
 categories: [fonts]
 ---
 

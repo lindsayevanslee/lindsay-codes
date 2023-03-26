@@ -3,6 +3,7 @@ title: "Repost: Does David Plotz interrupt Emily Bazelon too much on Slate's Pol
 description: "\\<clickbait\\> The answer may surprise you! \\</clickbait\\>"
 date: "2023-03-25"
 image: gabfest.jpg
+image-alt: "Logo for Slate Political Gabfest podcast"
 categories: [repost]
 ---
 
