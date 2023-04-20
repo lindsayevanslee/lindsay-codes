@@ -1,6 +1,7 @@
 ---
 title: "About"
-image: https://images.squarespace-cdn.com/content/v1/537e153fe4b02338db810244/1575885929838-7QX49BWV21TGZ686OEDQ/lee+lindsay.jpeg?format=750w
+image: me.jpeg
+image-alt: A white woman with brown hair pulled back, in a green patterned dress and beige cardigan, sitting in a wheelchair, smiling like she loves having a headshot taken
 about:
   template: solana
   links:
