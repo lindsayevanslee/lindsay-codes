@@ -8,6 +8,7 @@ website:
   description: "Lindsay Lee's techy blog"
   favicon: "favicon.png"
   navbar:
+    background: "#eee8d5"
     right:
       - about.qmd
       - icon: link
@@ -21,10 +22,11 @@ website:
 
 format:
   html:
-    theme: solar
+    theme: 
+      - solar
+      - custom.scss
     header-includes: <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
     mainfont: Roboto Mono
-    css: styles.css
 
 editor: visual
 
