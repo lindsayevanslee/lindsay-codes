@@ -27,6 +27,7 @@ format:
       - custom.scss
     header-includes: <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
     mainfont: Roboto Mono
+    code-block-bg: "#eee8d5"
 
 editor: visual
 

@@ -10,7 +10,7 @@ categories: [fonts]
 Inspired by my [sister](https://twitter.com/loren325)'s awesome PhD work in Medieval French, I have been playing around with designing a custom font. My latest experimentation is in this [font-test GitHub repo](https://github.com/lindsayevanslee/font-test) and is published to an accompanying GitHub pages site, which you can see here:
 
 ```{=html}
-<iframe width="780" height="500" src="https://lindsayevanslee.github.io/font-test/font-test.html" title="Font test"></iframe>
+<iframe width="500" height="500" src="https://lindsayevanslee.github.io/font-test/font-test.html" title="Font test"></iframe>
 ```
 ## Software
 
@@ -26,7 +26,6 @@ Glyphs has some pretty good documentation, and there are also some good videos o
 -   [DanielNisbet on Youtube](https://www.youtube.com/@DanielNisbet)
 -   [Creating an Apple color font](https://glyphsapp.com/learn/creating-an-apple-color-font)
 -   [Vertical metrics](https://glyphsapp.com/learn/vertical-metrics)
-
 
 ## Steps
 
@@ -82,11 +81,7 @@ Glyphs has some pretty good documentation, and there are also some good videos o
 
 ## Next steps
 
-- Make the font more cohesive
-- Draw better
-- Make more emojis
-- Figure out something cool to do with this
-
-
-
-
+-   Make the font more cohesive
+-   Draw better
+-   Make more emojis
+-   Figure out something cool to do with this
