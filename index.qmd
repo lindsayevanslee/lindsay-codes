@@ -1,5 +1,6 @@
 ---
-title: "lindsay.codes"
+title: "A blog of technical trial and error"
+subtitle: "By Lindsay Lee"
 listing:
   contents: posts
   sort: "date desc"
