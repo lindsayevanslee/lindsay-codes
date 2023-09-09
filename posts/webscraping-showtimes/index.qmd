@@ -1,0 +1,58 @@
+---
+title: "Webscraping movie showtimes with Scrapy"
+draft: true
+description: "Instagram ads got me again"
+#date: ""
+#image: 
+#image-alt: ""
+categories: [webscraping, python, raspberry pi]
+jupyter: python3
+execute:
+    eval: false
+---
+
+Put this jpg here and see if inky can download it from here:
+
+![](result.jpg)
+
+
+
+Install scrapy:
+
+```{python}
+pip install Scrapy
+```
+
+Initialize a new project:
+
+```{bash}
+scrapy startproject belcourt
+```
+
+Navigate to new project folder and initialize a spider:
+
+```{bash}
+cd belcourt
+scrapy genspider showtimes belcourt.org
+```
+
+create BelcourtItem pull relevant parts of belcourt website
+
+Navigate to `spiders` folder and run spider, printing output to json file:
+
+```{bash}
+cd belcourt/spiders
+scrapy runspider showtimes.py -o output_showtimes.json
+```
+
+write script for outputting jpeg
+
+https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images
+
+load jpg to inky frame
+
+https://www.python-engineer.com/posts/run-python-github-actions/ https://crontab.guru
+
+GitHub Actions
+
+Settings \> Actions \> General \> Workflow Permissions \> Read and write permissions
