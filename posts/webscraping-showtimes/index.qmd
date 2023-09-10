@@ -13,7 +13,7 @@ execute:
 
 Put this jpg here and see if inky can download it from here:
 
-![](result.jpg)
+![](result_optimized.jpg)
 
 
 
@@ -56,3 +56,10 @@ https://www.python-engineer.com/posts/run-python-github-actions/ https://crontab
 GitHub Actions
 
 Settings \> Actions \> General \> Workflow Permissions \> Read and write permissions
+
+
+Use pimoroni example as basis for loading to screen: https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py
+
+tried to load directly from raw jpg output in github repo, doesn't work--gives "can't read jpg" error
+
+trying to load from a different website.....->???
