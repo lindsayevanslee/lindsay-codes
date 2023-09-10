@@ -195,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Put this jpg here and see if inky can download it from here:</p>
-<p><img src="result.jpg" class="img-fluid"></p>
+<p><img src="result_optimized.jpg" class="img-fluid"></p>
 <p>Install scrapy:</p>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pip install Scrapy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -215,6 +215,9 @@ scrapy runspider showtimes.py -o output_showtimes.json</code></pre>
 <p>https://www.python-engineer.com/posts/run-python-github-actions/ https://crontab.guru</p>
 <p>GitHub Actions</p>
 <p>Settings &gt; Actions &gt; General &gt; Workflow Permissions &gt; Read and write permissions</p>
+<p>Use pimoroni example as basis for loading to screen: https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py</p>
+<p>tried to load directly from raw jpg output in github repo, doesn’t work–gives “can’t read jpg” error</p>
+<p>trying to load from a different website…..-&gt;???</p>
 
 
 
