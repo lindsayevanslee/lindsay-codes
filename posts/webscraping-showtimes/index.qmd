@@ -13,9 +13,7 @@ execute:
 
 Put this jpg here and see if inky can download it from here:
 
-![](result_optimized.jpg)
-
-
+![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result_optimized.jpg?raw=true)
 
 Install scrapy:
 
@@ -57,9 +55,10 @@ GitHub Actions
 
 Settings \> Actions \> General \> Workflow Permissions \> Read and write permissions
 
-
 Use pimoroni example as basis for loading to screen: https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py
 
 tried to load directly from raw jpg output in github repo, doesn't work--gives "can't read jpg" error
 
-trying to load from a different website.....->???
+trying to load from a different website.....-\> unoptimized version just gets stuck and doesn't finish, using optimized version does work!!!!
+
+link to github output -\>
