@@ -15,6 +15,8 @@ Put this jpg here and see if inky can download it from here:
 
 ![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result_optimized.jpg?raw=true)
 
+![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true)
+
 Install scrapy:
 
 ```{python}
@@ -61,4 +63,6 @@ tried to load directly from raw jpg output in github repo, doesn't work--gives "
 
 trying to load from a different website.....-\> unoptimized version just gets stuck and doesn't finish, using optimized version does work!!!!
 
-link to github output -\>
+link to github output -\> works! but repo must be public! (DUH)
+
+maybe linking directly to github will work now with public repo -\> nope, gives error about redirects
