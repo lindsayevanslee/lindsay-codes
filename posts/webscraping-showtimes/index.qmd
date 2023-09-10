@@ -1,7 +1,7 @@
 ---
 title: "Webscraping movie showtimes with Scrapy"
 draft: true
-description: "Instagram ads got me again"
+description: "The algorithm got me again"
 #date: ""
 #image: 
 #image-alt: ""
@@ -11,43 +11,89 @@ execute:
     eval: false
 ---
 
-Put this jpg here and see if inky can download it from here:
+I'm a flawed human being and therefore susceptible to ads I receive on the internet. One day I was scrolling and stumbled upon this little gadget by Pimoroni: the [Inky Frame 7.3\"](https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787), a fun little e-ink screen that you can program with micropython. I bought it without much a plan for what I would use it for, but thought it would be a fun excuse to practice my python skills. I soon got the idea to combine my loves: I spend all my free time and money at the [Belcourt Theatre](https://www.belcourt.org) in Nashville, and thought it would be cool to use the screen as a little display that shows the showtimes for the day.
 
-<!-- ![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result_optimized.jpg?raw=true) -->
+Accomplishing this means several things have to happen:
 
-<!-- ![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true) -->
+1.  Webscrape the showtimes from the theater's website
+2.  Format the showtimes into an image that works well on the Inky Frame display
+3.  Push the image output to the Inky Frame
+4.  Schedule all of the above to run daily automatically
 
-![](result.jpg)
+Here I go through what I did for each of these steps. All the code is available on [GitHub](https://github.com/lindsayevanslee/inky-frame).
 
-Install scrapy:
+# Web scrape the showtimes
 
-```{python}
+To webscrape the showtimes, I used the popular python package `Scrapy`. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called ["Web Scraping with Python"](https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282), which is where I first learned how to do this. She also has a book ["Web scraping with Python"](https://www.oreilly.com/library/view/web-scraping-with/9781491985564/) that is super informative. I'll leave most of the detail to her, but here is the gist:
+
+First install `Scrapy`:
+
+```{bash}
 pip install Scrapy
 ```
 
-Initialize a new project:
+Then you initialize a new project like so:
 
 ```{bash}
 scrapy startproject belcourt
 ```
 
-Navigate to new project folder and initialize a spider:
+Navigate to the new project folder and initialize a spider (a "spider" is the program that will do all the scraping that you specify). Here I'm creating a spider called `showtimes` that will scrape the website `belcourt.org`:
 
 ```{bash}
 cd belcourt
 scrapy genspider showtimes belcourt.org
 ```
 
-create BelcourtItem pull relevant parts of belcourt website
+In the `items.py` script that is generated, I defined the structure of the output that I wanted by defining a new class called `BelcourtItem`.
 
-Navigate to `spiders` folder and run spider, printing output to json file:
+```{python}
+import scrapy
+
+class BelcourtItem(scrapy.Item):
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    currenttime = scrapy.Field()
+    date = scrapy.Field()
+    shows = scrapy.Field()
+```
+
+In the `showtimes.py` script in the `spiders` folder, specify which content from the website should be pulled into your output object of class `BelcourtItem`. This involves inspecting the html of the website and finding the relevant elements. See Ryan Mitchell's course/book for tips on how to do this. I also suggest learning more about searching for HTML elements with XPATH--[this YouTube video](https://www.youtube.com/watch?v=NhG__BL8zFo&list=PLSao4Yl0-ZqMIEG604vsNJc1i5X8YUDar&index=1) was the best resource I've come across.
+
+To run the spider, navigate the console to the `spiders` folder and run spider like below. This will print the output to a json file called `output_showtimes.json`:
 
 ```{bash}
 cd belcourt/spiders
-scrapy runspider showtimes.py -o output_showtimes.json
+scrapy runspider showtimes.py -O output_showtimes.json
 ```
 
-write script for outputting jpeg
+You can see what this json file looks like in my GitHub repository.
+
+Voila! Easy! Now we need to take the data from this json file and turn it into a fairly attractive jpg.
+
+# Format the output into an image
+
+Converting this json into a jpg mostly involved getting familiar with the `Pillow` python package. It can be installed like so:
+
+```{bash}
+pip install Pillow
+```
+
+The script I wrote is called `belcourt_generate_image.py`, and you can find it in the GitHub repository. 
+
+First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their ["Getting Started with Inky Frame"](https://learn.pimoroni.com/article/getting-started-with-inky-frame) resource. I read the fonts directly from ttf files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my output.
+
+The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg must not be progressive. The frame can't handle it otherwise for some reason:
+
+```{python}
+background.save('result.jpg', progressive = False)
+```
+
+Now that we've got a jpg, time to get it on the screen!
+
+# Load image into Inky Frame
+
+Here is where we start getting into slightly uncharted territory. 
 
 https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images
 
@@ -69,4 +115,10 @@ link to github output -\> works! but repo must be public! (DUH)
 
 maybe linking directly to github will work now with public repo -\> nope, gives error about redirects
 
-try again to use unoptimized version, loading from github from a different site -> works???
+try again to use unoptimized version, loading from github from a different site -\> works???
+
+also works using the image copy of unoptimized version. so not sure why it wasn't working before.....
+
+embedding an iframe to jpg link doesn't work
+
+create github pages on inky frame repo and try to link to it from there -\> works! this seems like it would be the best final solution

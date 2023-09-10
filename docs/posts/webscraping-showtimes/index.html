@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lindsay Lee">
-<meta name="description" content="Instagram ads got me again">
+<meta name="description" content="The algorithm got me again">
 
 <title>lindsay.codes - Webscraping movie showtimes with Scrapy</title>
 <style>
@@ -156,7 +156,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <h1 class="title">Webscraping movie showtimes with Scrapy</h1>
                   <div>
         <div class="description">
-          Instagram ads got me again
+          The algorithm got me again
         </div>
       </div>
                           <div class="quarto-categories">
@@ -186,7 +186,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#web-scrape-the-showtimes" id="toc-web-scrape-the-showtimes" class="nav-link active" data-scroll-target="#web-scrape-the-showtimes">Web scrape the showtimes</a></li>
+  <li><a href="#format-the-output-into-an-image" id="toc-format-the-output-into-an-image" class="nav-link" data-scroll-target="#format-the-output-into-an-image">Format the output into an image</a></li>
+  <li><a href="#load-image-into-inky-frame" id="toc-load-image-into-inky-frame" class="nav-link" data-scroll-target="#load-image-into-inky-frame">Load image into Inky Frame</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -194,24 +202,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>Put this jpg here and see if inky can download it from here:</p>
-<!-- ![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result_optimized.jpg?raw=true) -->
-<!-- ![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true) -->
-<p><img src="result.jpg" class="img-fluid"></p>
-<p>Install scrapy:</p>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pip install Scrapy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Initialize a new project:</p>
+<p>I’m a flawed human being and therefore susceptible to ads I receive on the internet. One day I was scrolling and stumbled upon this little gadget by Pimoroni: the <a href="https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787">Inky Frame 7.3"</a>, a fun little e-ink screen that you can program with micropython. I bought it without much a plan for what I would use it for, but thought it would be a fun excuse to practice my python skills. I soon got the idea to combine my loves: I spend all my free time and money at the <a href="https://www.belcourt.org">Belcourt Theatre</a> in Nashville, and thought it would be cool to use the screen as a little display that shows the showtimes for the day.</p>
+<p>Accomplishing this means several things have to happen:</p>
+<ol type="1">
+<li>Webscrape the showtimes from the theater’s website</li>
+<li>Format the showtimes into an image that works well on the Inky Frame display</li>
+<li>Push the image output to the Inky Frame</li>
+<li>Schedule all of the above to run daily automatically</li>
+</ol>
+<p>Here I go through what I did for each of these steps. All the code is available on <a href="https://github.com/lindsayevanslee/inky-frame">GitHub</a>.</p>
+<section id="web-scrape-the-showtimes" class="level1">
+<h1>Web scrape the showtimes</h1>
+<p>To webscrape the showtimes, I used the popular python package <code>Scrapy</code>. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called <a href="https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282">“Web Scraping with Python”</a>, which is where I first learned how to do this. She also has a book <a href="https://www.oreilly.com/library/view/web-scraping-with/9781491985564/">“Web scraping with Python”</a> that is super informative. I’ll leave most of the detail to her, but here is the gist:</p>
+<p>First install <code>Scrapy</code>:</p>
+<pre class="{bash}"><code>pip install Scrapy</code></pre>
+<p>Then you initialize a new project like so:</p>
 <pre class="{bash}"><code>scrapy startproject belcourt</code></pre>
-<p>Navigate to new project folder and initialize a spider:</p>
+<p>Navigate to the new project folder and initialize a spider (a “spider” is the program that will do all the scraping that you specify). Here I’m creating a spider called <code>showtimes</code> that will scrape the website <code>belcourt.org</code>:</p>
 <pre class="{bash}"><code>cd belcourt
 scrapy genspider showtimes belcourt.org</code></pre>
-<p>create BelcourtItem pull relevant parts of belcourt website</p>
-<p>Navigate to <code>spiders</code> folder and run spider, printing output to json file:</p>
+<p>In the <code>items.py</code> script that is generated, I defined the structure of the output that I wanted by defining a new class called <code>BelcourtItem</code>.</p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scrapy</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BelcourtItem(scrapy.Item):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># define the fields for your item here like:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># name = scrapy.Field()</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    currenttime <span class="op">=</span> scrapy.Field()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    date <span class="op">=</span> scrapy.Field()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    shows <span class="op">=</span> scrapy.Field()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the <code>showtimes.py</code> script in the <code>spiders</code> folder, specify which content from the website should be pulled into your output object of class <code>BelcourtItem</code>. This involves inspecting the html of the website and finding the relevant elements. See Ryan Mitchell’s course/book for tips on how to do this. I also suggest learning more about searching for HTML elements with XPATH–<a href="https://www.youtube.com/watch?v=NhG__BL8zFo&amp;list=PLSao4Yl0-ZqMIEG604vsNJc1i5X8YUDar&amp;index=1">this YouTube video</a> was the best resource I’ve come across.</p>
+<p>To run the spider, navigate the console to the <code>spiders</code> folder and run spider like below. This will print the output to a json file called <code>output_showtimes.json</code>:</p>
 <pre class="{bash}"><code>cd belcourt/spiders
-scrapy runspider showtimes.py -o output_showtimes.json</code></pre>
-<p>write script for outputting jpeg</p>
+scrapy runspider showtimes.py -O output_showtimes.json</code></pre>
+<p>You can see what this json file looks like in my GitHub repository.</p>
+<p>Voila! Easy! Now we need to take the data from this json file and turn it into a fairly attractive jpg.</p>
+</section>
+<section id="format-the-output-into-an-image" class="level1">
+<h1>Format the output into an image</h1>
+<p>Converting this json into a jpg mostly involved getting familiar with the <code>Pillow</code> python package. It can be installed like so:</p>
+<pre class="{bash}"><code>pip install Pillow</code></pre>
+<p>The script I wrote is called <code>belcourt_generate_image.py</code>, and you can find it in the GitHub repository.</p>
+<p>First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame">“Getting Started with Inky Frame”</a> resource. I read the fonts directly from ttf files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my output.</p>
+<p>The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg must not be progressive. The frame can’t handle it otherwise for some reason:</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>background.save(<span class="st">'result.jpg'</span>, progressive <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that we’ve got a jpg, time to get it on the screen!</p>
+</section>
+<section id="load-image-into-inky-frame" class="level1">
+<h1>Load image into Inky Frame</h1>
+<p>Here is where we start getting into slightly uncharted territory.</p>
 <p>https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images</p>
 <p>load jpg to inky frame</p>
 <p>https://www.python-engineer.com/posts/run-python-github-actions/ https://crontab.guru</p>
@@ -223,8 +265,12 @@ scrapy runspider showtimes.py -o output_showtimes.json</code></pre>
 <p>link to github output -&gt; works! but repo must be public! (DUH)</p>
 <p>maybe linking directly to github will work now with public repo -&gt; nope, gives error about redirects</p>
 <p>try again to use unoptimized version, loading from github from a different site -&gt; works???</p>
+<p>also works using the image copy of unoptimized version. so not sure why it wasn’t working before…..</p>
+<p>embedding an iframe to jpg link doesn’t work</p>
+<p>create github pages on inky frame repo and try to link to it from there -&gt; works! this seems like it would be the best final solution</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
