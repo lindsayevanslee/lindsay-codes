@@ -13,9 +13,11 @@ execute:
 
 Put this jpg here and see if inky can download it from here:
 
-![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result_optimized.jpg?raw=true)
+<!-- ![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result_optimized.jpg?raw=true) -->
 
-![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true)
+<!-- ![](https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true) -->
+
+![](result.jpg)
 
 Install scrapy:
 
@@ -66,3 +68,5 @@ trying to load from a different website.....-\> unoptimized version just gets st
 link to github output -\> works! but repo must be public! (DUH)
 
 maybe linking directly to github will work now with public repo -\> nope, gives error about redirects
+
+try again to use unoptimized version, loading from github from a different site -> works???
