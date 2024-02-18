@@ -110,43 +110,18 @@ This will load the jpg to the GitHub Page, and then you can copy the jpg link fr
 
 # Automate to run daily
 
-load jpg to inky frame
+There are two aspects of automation that need to be implemented: automatically updating the jpg every day with the day's showtimes, and automating the refresh of the inky frame to display the new jpg.
 
-https://www.python-engineer.com/posts/run-python-github-actions/ https://crontab.guru
+## Automate the jpg update
 
-GitHub Actions
+GitHub Actions can be used to execute scripts on a schedule and make commits to the repository. I used [this guide](https://www.python-engineer.com/posts/run-python-github-actions/) to set up a GitHub Action that would run the spider and generate the jpg every day at 6am. The syntax for defining the schedule is called cron, and [this website](https://crontab.guru) is super helpful for figuring out how to configure the cron syntax to do what you want. 
 
-Settings \> Actions \> General \> Workflow Permissions \> Read and write permissions
+This GitHub Action requires giving the workflows read/write permissions by enabling: Settings \> Actions \> General \> Workflow Permissions \> Read and write permissions. The workflow is defined by a YAML file that I've called `.github/workflows/actions.yml` in the GitHub repository. The script runs the spider, runs the `belcourt_generate_image.py` script, and then commits the resulting jpg to the repository.
 
-Use pimoroni example as basis for loading to screen: 
+A second GitHub Action is needed to update the GitHub Pages deployment every time the jpg is updated. By going to Settings \> Pages, you can configure the deployment of the webpage. GitHub automatically provides an Action template for you, and there is additional detail in the [documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site). One change I made to the YAML file was to schedule the deployment to run after the first action that updates the jpg. I wanted to do this by triggering the deployment after the new changes were committed to the repository, but I couldn't get it to work. I found [this blog](https://jahed.dev/2021/04/24/triggering-github-actions-from-commits-by-other-actions/) that was trying to do the same thing, but I couldn't figure it out. Instead I scheduled the deployment to run half an hour after the first action, which should be enough time for it to finish.
 
-tried to load directly from raw jpg output in github repo, doesn't work--gives "can't read jpg" error
 
-trying to load from a different website.....-\> unoptimized version just gets stuck and doesn't finish, using optimized version does work!!!!
-
-link to github output -\> works! but repo must be public! (DUH)
-
-maybe linking directly to github will work now with public repo -\> nope, gives error about redirects
-
-try again to use unoptimized version, loading from github from a different site -\> works???
-
-also works using the image copy of unoptimized version. so not sure why it wasn't working before.....
-
-embedding an iframe to jpg link doesn't work
-
-create github pages on inky frame repo and try to link to it from there -\> works! this seems like it would be the best final solution
-
-need to adjust the github pages to trigger on each new commit
-found this blog wanting to do the same thing: https://jahed.dev/2021/04/24/triggering-github-actions-from-commits-by-other-actions/
-geting ssh key: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-setting repo secret: https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions
-found email for actions-user by checking a job that ran and checkign otuput of "commit files" step: action@github.com
-
-couldn' tget the sshkey thing to work, so will just schedule the action for after the other action finishes using cron
-
-actually tried again, SSH using my email, making sure to paste all "as is" - includign ---BEGINNING --- and ---ENDING---- lines in private key, and the empty new line -> works! and hopefully should work when the spider runs, because according to this the email doesn't matter (it's just a comment): https://askubuntu.com/questions/801997/purpose-of-email-at-the-end-of-ssh-public-key
-
-SSH didn't work, bring back schedule. had to completely delete SSH deploy key and secret for the github pages to update again
+## Automate the inky frame refresh
 
 Set showtimes_from_web.py script to run on startup by linking to it within main.py
 
