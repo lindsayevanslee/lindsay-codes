@@ -9,7 +9,7 @@
 <meta name="author" content="Lindsay Lee">
 <meta name="description" content="The algorithm got me again">
 
-<title>lindsay.codes - Making my own box office sign with Scrapy and an e-Ink screen</title>
+<title>lindsay.codes - Making my own box office sign with Scrapy and an Inky Frame</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -153,7 +153,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Making my own box office sign with Scrapy and an e-Ink screen</h1>
+      <h1 class="title">Making my own box office sign with Scrapy and an Inky Frame</h1>
                   <div>
         <div class="description">
           The algorithm got me again
@@ -163,6 +163,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                 <div class="quarto-category">webscraping</div>
                 <div class="quarto-category">python</div>
                 <div class="quarto-category">raspberry pi</div>
+                <div class="quarto-category">automation</div>
               </div>
                   </div>
   </div>
@@ -196,7 +197,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#automate-to-run-daily" id="toc-automate-to-run-daily" class="nav-link" data-scroll-target="#automate-to-run-daily">Automate to run daily</a>
   <ul class="collapse">
   <li><a href="#automate-the-jpg-update" id="toc-automate-the-jpg-update" class="nav-link" data-scroll-target="#automate-the-jpg-update">Automate the jpg update</a></li>
-  <li><a href="#automate-the-inky-frame-refresh" id="toc-automate-the-inky-frame-refresh" class="nav-link" data-scroll-target="#automate-the-inky-frame-refresh">Automate the inky frame refresh</a></li>
+  <li><a href="#automate-the-inky-frame-refresh" id="toc-automate-the-inky-frame-refresh" class="nav-link" data-scroll-target="#automate-the-inky-frame-refresh">Automate the Inky Frame refresh</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -210,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>I’m a flawed human being and therefore susceptible to ads I receive on the internet. One day I was scrolling and stumbled upon this little gadget by Pimoroni: the <a href="https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787">Inky Frame 7.3”</a>, a fun little e-ink screen that you can program with micropython. I bought it without much a plan for what I would use it for, but thought it would be a fun excuse to practice my python skills. I soon got the idea to combine my loves: I spend all my free time and money at the <a href="https://www.belcourt.org">Belcourt Theatre</a> in Nashville, and thought it would be cool to use the screen as a little display that shows the showtimes for the day.</p>
 <p>Accomplishing this means several things have to happen:</p>
 <ol type="1">
-<li>Webscrape the showtimes from the theater’s website</li>
+<li>Web scrape the showtimes from the theater’s website</li>
 <li>Format the showtimes into an image that works well on the Inky Frame display</li>
 <li>Push the image output to the Inky Frame</li>
 <li>Schedule all of the above to run daily automatically</li>
@@ -218,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Here I go through what I did for each of these steps. All the code is available on <a href="https://github.com/lindsayevanslee/inky-frame">GitHub</a>.</p>
 <section id="web-scrape-the-showtimes" class="level1">
 <h1>Web scrape the showtimes</h1>
-<p>To webscrape the showtimes, I used the popular python package <code>Scrapy</code>. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called <a href="https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282">“Web Scraping with Python”</a>, which is where I first learned how to do this. She also has a book <a href="https://www.oreilly.com/library/view/web-scraping-with/9781491985564/">“Web scraping with Python”</a> that is super informative. I’ll leave most of the detail to her, but here is the gist:</p>
+<p>To web scrape the showtimes, I used the popular python package <code>Scrapy</code>. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called <a href="https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282">“Web Scraping with Python”</a>, which is where I first learned how to do this. She also has a book <a href="https://www.oreilly.com/library/view/web-scraping-with/9781491985564/">“Web scraping with Python”</a> that is super informative. I’ll leave most of the detail to her, but here is the gist:</p>
 <p>First install <code>Scrapy</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install Scrapy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -249,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> belcourt/spiders</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scrapy</span> runspider showtimes.py <span class="at">-O</span> output_showtimes.json</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>You can see what this json file looks like in my GitHub repository.</p>
+<p>You can see what <a href="https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/output_showtimes.json">this json file</a> looks like in my GitHub repository.</p>
 <p>Voila! Easy! Now we need to take the data from this json file and turn it into a fairly attractive jpg.</p>
 </section>
 <section id="format-the-output-into-an-image" class="level1">
@@ -258,9 +259,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install Pillow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The script I wrote is called <code>belcourt_generate_image.py</code>, and you can find it in the GitHub repository.</p>
-<p>First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame">“Getting Started with Inky Frame”</a> resource. I read the fonts directly from ttf files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my output.</p>
-<p>The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg must not be progressive. The frame can’t handle it otherwise for some reason:</p>
+<p>The script I wrote is called <code>belcourt_generate_image.py</code>, and you can find it in the <a href="https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/belcourt_generate_image.py">GitHub repository</a>.</p>
+<p>First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame">“Getting Started with Inky Frame”</a> resource. I read the fonts directly from <code>ttf</code> files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my jpg output.</p>
+<p>The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg not be “progressive.” The frame can’t handle it otherwise, for some reason:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>background.save(<span class="st">'result.jpg'</span>, progressive <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -268,8 +269,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="load-image-into-inky-frame" class="level1">
 <h1>Load image into Inky Frame</h1>
-<p>Here is where we start getting into slightly uncharted territory. Pimoroni provides some nice guides and templates for displaying content on the screen. I first followed <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images">this guide</a> to display a static image on the screen that was loaded directly into memory. That’s not good enough though, because we need the screen to load the jpg via the web. Luckily they have <a href="https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py">another example</a> that does something similar. I adapted this script into my own version <code>showtimes_from_web.py</code>, available in the GitHub repository. This script requires wifi credentials saved in a <code>secrets.py</code> file, as described in the Pimoroni guide above. It also requires a <code>network_manager.py</code> file, available from <a href="https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common">Pimoroni’s example GitHub</a>. It also requires a micro SD card be installed, which luckily comes with the Inky Frame.</p>
-<p>Most importantly, the script needs a URL to access the image from. First I tried to use the link to the jpg in the repository: <code>https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true</code>. However this link leads to a redirect, which the <code>urllib</code> micropython package used by the Inky Frame cannot handle. Therefore we need a stable, direct link to the jpg. Luckily GitHub offers the ability to create a webpage for your repository using GitHub Pages. This can be configured by going to the settings for the repository, then going to “Pages”. I chose to use “GitHub Actions” as the source and the “main” branch as the branch to publish to. By default <code>README.md</code> will be used as the main page for the resulting site. Link to the jpg in the <code>README</code> like so:</p>
+<p>Here is where we start getting into slightly uncharted territory. Pimoroni provides some nice guides and templates for displaying content on the screen. I first followed <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images">this guide</a> to display a static image on the screen that was loaded directly into memory. That’s not good enough though, because we need the screen to load the jpg via the web. Luckily they have <a href="https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py">another example</a> that does something similar. I adapted this script into my own version <code>showtimes_from_web.py</code>, available in the <a href="https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/inky_frame_scripts/showtimes_from_web.py">GitHub repository</a>. This script requires wifi credentials saved in a <code>secrets.py</code> file, as described in the Pimoroni guide above. It also requires a <code>network_manager.py</code> file, available from <a href="https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common">Pimoroni’s example GitHub</a>. It also requires a micro SD card be installed, which luckily comes with the Inky Frame.</p>
+<p>Most importantly, the script needs a URL to access the image from. First I tried to use the link to the jpg in the repository: <code>https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true</code>. However, this link leads to a redirect, which the <code>urllib</code> micropython package used by the Inky Frame cannot handle. Therefore we need a stable, direct link to the jpg. Luckily GitHub offers the ability to create a webpage for your repository using GitHub Pages. This can be configured by going to the settings for the repository, then going to “Pages”. I chose to use “GitHub Actions” as the source and the “main” branch as the branch to publish to. By default <code>README.md</code> will be used as the main page for the resulting site. I linked to the jpg in the <code>README</code> like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># inky-frame</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>Code powering my shiny new Inky Frame</span>
@@ -277,32 +278,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>Here is the latest output:</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="al">![Image with latest showtimes from the Belcourt Theatre](belcourt/result.jpg)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This will load the jpg to the GitHub Page, and then you can copy the jpg link from there for use in the <code>showtimes_from_web.py</code> script.</p>
+<p>This will load the jpg to the GitHub Page, and then you can copy the link to the jpg from there for use in the <code>showtimes_from_web.py</code> script.</p>
 </section>
 <section id="automate-to-run-daily" class="level1">
 <h1>Automate to run daily</h1>
-<p>There are two aspects of automation that need to be implemented: automatically updating the jpg every day with the day’s showtimes, and automating the refresh of the inky frame to display the new jpg.</p>
+<p>There are two aspects of automation that need to be implemented: automatically updating the jpg every day with the day’s showtimes, and automating the refresh of the screen to display the new jpg.</p>
 <section id="automate-the-jpg-update" class="level2">
 <h2 class="anchored" data-anchor-id="automate-the-jpg-update">Automate the jpg update</h2>
-<p>GitHub Actions can be used to execute scripts on a schedule and make commits to the repository. I used <a href="https://www.python-engineer.com/posts/run-python-github-actions/">this guide</a> to set up a GitHub Action that would run the spider and generate the jpg every day at 6am. The syntax for defining the schedule is called cron, and <a href="https://crontab.guru">this website</a> is super helpful for figuring out how to configure the cron syntax to do what you want.</p>
+<p>GitHub Actions can be used to execute scripts on a schedule and make commits to the repository. I used <a href="https://www.python-engineer.com/posts/run-python-github-actions/">this guide</a> to set up a GitHub Action that would run the spider and generate the jpg every in the early morning. The syntax for defining the schedule is called cron, and <a href="https://crontab.guru">this website</a> is super helpful for figuring out how to configure the cron syntax to do what you want.</p>
 <p>This GitHub Action requires giving the workflows read/write permissions by enabling: Settings &gt; Actions &gt; General &gt; Workflow Permissions &gt; Read and write permissions. The workflow is defined by a YAML file that I’ve called <code>.github/workflows/actions.yml</code> in the GitHub repository. The script runs the spider, runs the <code>belcourt_generate_image.py</code> script, and then commits the resulting jpg to the repository.</p>
-<p>A second GitHub Action is needed to update the GitHub Pages deployment every time the jpg is updated. By going to Settings &gt; Pages, you can configure the deployment of the webpage. GitHub automatically provides an Action template for you, and there is additional detail in the <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">documentation</a>. One change I made to the YAML file was to schedule the deployment to run after the first action that updates the jpg. I wanted to do this by triggering the deployment after the new changes were committed to the repository, but I couldn’t get it to work. I found <a href="https://jahed.dev/2021/04/24/triggering-github-actions-from-commits-by-other-actions/">this blog</a> that was trying to do the same thing, but I couldn’t figure it out. Instead I scheduled the deployment to run half an hour after the first action, which should be enough time for it to finish.</p>
+<p>A second GitHub Action is needed to update the GitHub Pages deployment every time the jpg is updated. By going to Settings &gt; Pages, you can configure the deployment of the webpage. GitHub automatically provides an Action template for you, and there is additional detail in the <a href="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site">documentation</a>. One change I made to the YAML file was to schedule the deployment to run after the first action that updates the jpg. I wanted to do this by triggering the deployment after the new changes were committed to the repository. I found <a href="https://jahed.dev/2021/04/24/triggering-github-actions-from-commits-by-other-actions/">this blog</a> that was trying to do the same thing, but I couldn’t get it to work. It’s got something to do with setting SSH keys, which I’ll figure out at a later date. Instead I again used cron to schedule the deployment to run half an hour after the first action, which should be enough time for the jpg generation to finish.</p>
 </section>
 <section id="automate-the-inky-frame-refresh" class="level2">
-<h2 class="anchored" data-anchor-id="automate-the-inky-frame-refresh">Automate the inky frame refresh</h2>
-<p>The final step in this process is to automate the inky frame to refresh the image every day at a certain time. This is where I ran into some trouble.</p>
-<p>The inky frame will run anything saved as <code>main.py</code> when it starts up. If <code>main.py</code> is set to:</p>
+<h2 class="anchored" data-anchor-id="automate-the-inky-frame-refresh">Automate the Inky Frame refresh</h2>
+<p>The final step in this process is to automate the Inky Frame to refresh the image every day at a certain time. This is where I ran into some trouble.</p>
+<p>The Inky Frame will run anything saved as <code>main.py</code> when it starts up. If <code>main.py</code> is set to:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#run showtimes_from_web.py on start-up</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"showtimes_from_web.py"</span>) <span class="im">as</span> f:</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">exec</span>(f.read())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>then my script <code>showtimes_from_web.py</code> will run on startup, which pulls down the jpg from the GitHub page and displays it on the screen. The screen will start up when it is plugged in to USB power or when the battery pack is turned on. However, I don’t want to have to start up the screen manually each day, and I also don’t want to leave it plugged in all the time, so I need to find a way to get it to refresh itself while on battery power.</p>
+<p>then my script <code>showtimes_from_web.py</code> will run on start-up, which pulls down the jpg from the GitHub page and displays it on the screen. The screen will start up when it is plugged in to USB power or when the battery pack is turned on. However, I don’t want to have to start up the screen manually each day, and I also don’t want to leave it plugged in all the time, so I need to find a way to get it to refresh itself while on battery power.</p>
 <p>I did a bunch of searching, and there are some <a href="https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/modules_py/inky_frame.md#function-reference">helper functions</a> out there that seemed promising.</p>
 <p>I tried a bunch of things first. I tried adding <code>inky_frame.sleep_for(1)</code> to <code>main.py</code> which should theoretically cause it to go to sleep for a minute and then start back up, but that didn’t trigger another run of <code>main.py</code>. I also tried adding this to the <code>showtimes_from_web.py</code> script itself, but that also didn’t work. I tried running another <code>gc.collect()</code> at the end of <code>showtimes_from_web.py</code> in order to ensure that as much of the RAM was available as possible, but that also didn’t work. I tried to find a way to “close” the jpg (the <code>showtimes_from_web.py</code> script has an <code>open_file</code> command, so I figured, maybe it needs to be closed again in order for the script to truly terminate), but it doesn’t seem to be needed because it looks like the <code>decode</code> function called directly after <code>open_file</code> contains a closing function within it.</p>
 <p>In order to see if the <code>sleep_for()</code> function does actually start a refresh, I tried putting it at the beginning of the <code>main.py</code> function instead of at the end. It does indeed trigger a refresh of <code>main.py</code>, so that indicated that there is some issue with the <code>showtimes_from_web.py</code> fully finishing. Another indicator that the script isn’t fully finishing is that the busy symbol on the screen doesn’t go away after the screen is refreshed.</p>
 <p>I also tried following <a href="https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#">this blog using timers</a> but this also didn’t work. I could see the timer was working but it didn’t spark a refresh, which was more evidence that there is an issue with the showtimes script fully finishing.</p>
-<p>Then I noticed that there was a file on my inky frame called <code>state.json</code> that seemed to indicate the script was continuing to run. I tried deleting this file by using <code>inky_helper.clear_state()</code>. the console. After doing this and including <code>sleep_for()</code> at the end of <code>main.py</code>, I was able to trigger a refresh when it was plugged in to USB power! But on battery power, it still didn’t work.</p>
+<p>Then I noticed that there was a file on my Inky Frame called <code>state.json</code> that seemed to indicate the script was continuing to run. I tried deleting this file by using <code>inky_helper.clear_state()</code>. the console. After doing this and including <code>sleep_for()</code> at the end of <code>main.py</code>, I was able to trigger a refresh when it was plugged in to USB power! But on battery power, it still didn’t work.</p>
 <p>After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the <a href="https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26">Pimoroni forums</a> and in their <a href="https://github.com/pimoroni/pimoroni-pico/issues/866">GitHub issues</a>. In that thread someone posts a patch for micropython that they say solves the issue. I tried installing <a href="https://github.com/w3stbam/pimoroni-pico/releases/">this patch</a>, and it does seem like it prevents the showtimes script from getting stuck and not fully finishing. However, after running <code>sleep_for()</code>, the script just stops and doesn’t start <code>main.py</code> from the beginning as I want.</p>
 <p>I reread the thread on the forum a few times and noticed that the original poster actually executes their <code>graphics.update()</code> and <code>sleep_for()</code> within a <code>while</code> loop. When I add this loop to my own script, like this:</p>
 <div class="cell">
@@ -316,7 +317,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    inky_frame.sleep_for(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>…it does successfully cause a refresh after the screen sleeps! We’re getting closer! However after the first refresh, I got a strange <code>EPERM</code> error. After further copying the techniques of the original poster and adding some error logging to my scripts, I saw the error was occurring at the <code>uos.mount()</code> command at the second run-through. I found the <a href="https://docs.micropython.org/en/v1.15/library/uos.html">documentation for <code>uos</code></a>, and saw that <code>uos.mount()</code> throws this <code>EPERM</code> error when the file system is already mounted. I tried adding a <code>uos.umount()</code> command at the very end of the <code>showtimes_from_web.py</code> script, and this seems to have solved the issue! The screen refreshes continuously!</p>
+<p>…it does successfully cause a refresh after the screen sleeps! We’re getting closer! However after the first refresh, I got a strange <code>EPERM</code> error. After further copying the techniques of the original poster and adding some error logging to my scripts, I saw the error was occurring at the <code>uos.mount()</code> command in <code>showtimes_from_web.py</code> at the second run-through. I found the <a href="https://docs.micropython.org/en/v1.15/library/uos.html">documentation for <code>uos</code></a>, and saw that <code>uos.mount()</code> throws this <code>EPERM</code> error when the file system is already mounted. I tried adding a <code>uos.umount()</code> command at the very end of the <code>showtimes_from_web.py</code> script, and this seems to have solved the issue! The screen refreshes continuously!</p>
 <p>Finally, the moment of truth…does it refresh continuously when on battery power? I unplug the frame, turn on the battery pack, perform a reset (by holding down the A, E, and reset buttons), and wait…and it works! The screen refreshes on its own!</p>
 <center>
 <div class="quarto-figure quarto-figure-center">
@@ -328,6 +329,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </center>
 <p>Hallelujah! Finally I’ll be able to sleep at night.</p>
 <p>Lastly, I increase the sleep time to 60 minutes with <code>sleep_for(60)</code>. Hopefully this doesn’t drain the battery too quickly. I may further increase it later.</p>
+<p>All of the scripts that I used on the Inky Frame (these are the only ones loaded–I deleted all other default examples and libraries that it comes with) are in the <a href="https://github.com/lindsayevanslee/inky-frame/tree/main/belcourt/inky_frame_scripts">inky_frame_scripts folder</a> of the GitHub repository.</p>
 
 
 </section>
