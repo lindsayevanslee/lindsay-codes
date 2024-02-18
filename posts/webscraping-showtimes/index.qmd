@@ -1,5 +1,5 @@
 ---
-title: "Webscraping movie showtimes with Scrapy"
+title: "Making my own box office sign with Scrapy and an e-Ink screen"
 draft: true
 description: "The algorithm got me again"
 #date: ""
@@ -123,17 +123,30 @@ A second GitHub Action is needed to update the GitHub Pages deployment every tim
 
 ## Automate the inky frame refresh
 
-Set showtimes_from_web.py script to run on startup by linking to it within main.py
+The final step in this process is to automate the inky frame to refresh the image every day at a certain time. This is where I ran into some trouble. 
 
-on battery power => turning on and pressing a button causes main.py to run, therefore refreshing the image
+The inky frame will run anything saved as `main.py` when it starts up. If `main.py` is set to:
 
-how to get have main.py run daily on battery power? tried adding inky_frame.sleep_for(1) to main.py, but that doesn't trigger another run of main.py. Tried adding this to the showtimes script itself, also didnt work. try running another gc.collect() at the en dof showtimes script, also didn't work. tried to find a way to close a jpeg, doesn't seem to be needed because it looks like decode contains a closing function 
+```{python}
+#run showtimes_from_web.py on start-up
+with open("showtimes_from_web.py") as f:
+    exec(f.read())
+```
 
-putting sleep. functionb efore showtimes does indeed start a refresh, so having at the end of main.py should work . so seems like there is some issue with the script fully finishing
+then my script `showtimes_from_web.py` will run on startup, which pulls down the jpg from the GitHub page and displays it on the screen. The screen will start up when it is plugged in to USB power or when the battery pack is turned on. However, I don't want to have to start up the screen manually each day, and I also don't want to leave it plugged in all the time, so I need to find a way to get it to refresh itself while on battery power.
 
-Also tried this: https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#
-clearly timer is working but it doesn't spark a refresh. points to another issue with showtimes sccript fully finishing
+I did a bunch of searching, and there are some [helper functions](https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/modules_py/inky_frame.md#function-reference) out there that seemed promising.
 
-deleted teh file state.json by using clear_state in teh console which looks like it's used by the original main.py to remember. which example script to run. after doing this, the busy symbol goes away and having the sleep command at the end of main.py seems to work!!!!!!!!!!!! trying also adding clear_state() to main.py to make sure it's deleted before and after runtime. this doesn't seem to work. but we are getting closer.......next try not running app wiht launch_app but back to original way
+I tried a bunch of things first. I tried adding `inky_frame.sleep_for(1)` to `main.py` which should theoretically cause it to go to sleep for a minute and then start back up, but that didn't trigger another run of `main.py`. I also tried adding this to the `showtimes_from_web.py` script itself, but that also didn't work. I tried running another `gc.collect()` at the end of `showtimes_from_web.py` in order to ensure that as much of the RAM was available as possible, but that also didn't work. I tried to find a way to "close" the jpg (the `showtimes_from_web.py` script has an `open_file` command, so I figured, maybe it needs to be closed again in order for the script to truly terminate), but it doesn't seem to be needed because it looks like the `decode` function called directly after `open_file` contains a closing function within it.
+
+In order to see if the `sleep_for()` function does actually start a refresh, I tried putting it at the beginning of the `main.py` function instead of at the end. It does indeed trigger a refresh of `main.py`, so that indicated that there is some issue with the `showtimes_from_web.py` fully finishing. Another indicator that the script isn't fully finishing is that the busy symbol on the screen doesn't go away after the screen is refreshed.
+
+I also tried following [this blog using timers](https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#) but this also didn't work. I could see the timer was working but it didn't spark a refresh, which was more evidence that there is an issue with the showtimes script fully finishing.
+
+Then I noticed that there was a file on my inky frame called `state.json` that seemed to indicate the script was continuing to run. I tried deleting this file by using `inky_helper.clear_state()`. the console. After doing this and including `sleep_for()` at the end of `main.py`, I was able to trigger a refresh when it was plugged in to USB power! But on battery power, it still didn't work.
+
+After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the [Pimoroni forums](https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26) and in their [GitHub issues](https://github.com/pimoroni/pimoroni-pico/issues/866. Someone has released a firmware patch that is supposed to fix the issue, but I haven't tried it yet. I'll update this post if I do.
+
+
 
 
