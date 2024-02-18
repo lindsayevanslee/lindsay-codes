@@ -193,6 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#web-scrape-the-showtimes" id="toc-web-scrape-the-showtimes" class="nav-link active" data-scroll-target="#web-scrape-the-showtimes">Web scrape the showtimes</a></li>
   <li><a href="#format-the-output-into-an-image" id="toc-format-the-output-into-an-image" class="nav-link" data-scroll-target="#format-the-output-into-an-image">Format the output into an image</a></li>
   <li><a href="#load-image-into-inky-frame" id="toc-load-image-into-inky-frame" class="nav-link" data-scroll-target="#load-image-into-inky-frame">Load image into Inky Frame</a></li>
+  <li><a href="#automate-to-run-daily" id="toc-automate-to-run-daily" class="nav-link" data-scroll-target="#automate-to-run-daily">Automate to run daily</a></li>
   </ul>
 </nav>
     </div>
@@ -215,14 +216,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Web scrape the showtimes</h1>
 <p>To webscrape the showtimes, I used the popular python package <code>Scrapy</code>. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called <a href="https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282">“Web Scraping with Python”</a>, which is where I first learned how to do this. She also has a book <a href="https://www.oreilly.com/library/view/web-scraping-with/9781491985564/">“Web scraping with Python”</a> that is super informative. I’ll leave most of the detail to her, but here is the gist:</p>
 <p>First install <code>Scrapy</code>:</p>
-<pre class="{bash}"><code>pip install Scrapy</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install Scrapy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Then you initialize a new project like so:</p>
-<pre class="{bash}"><code>scrapy startproject belcourt</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">scrapy</span> startproject belcourt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>Navigate to the new project folder and initialize a spider (a “spider” is the program that will do all the scraping that you specify). Here I’m creating a spider called <code>showtimes</code> that will scrape the website <code>belcourt.org</code>:</p>
-<pre class="{bash}"><code>cd belcourt
-scrapy genspider showtimes belcourt.org</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> belcourt</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scrapy</span> genspider showtimes belcourt.org</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>In the <code>items.py</code> script that is generated, I defined the structure of the output that I wanted by defining a new class called <code>BelcourtItem</code>.</p>
-<div class="cell" data-execution_count="1">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scrapy</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BelcourtItem(scrapy.Item):</span>
@@ -234,32 +241,47 @@ scrapy genspider showtimes belcourt.org</code></pre>
 </div>
 <p>In the <code>showtimes.py</code> script in the <code>spiders</code> folder, specify which content from the website should be pulled into your output object of class <code>BelcourtItem</code>. This involves inspecting the html of the website and finding the relevant elements. See Ryan Mitchell’s course/book for tips on how to do this. I also suggest learning more about searching for HTML elements with XPATH–<a href="https://www.youtube.com/watch?v=NhG__BL8zFo&amp;list=PLSao4Yl0-ZqMIEG604vsNJc1i5X8YUDar&amp;index=1">this YouTube video</a> was the best resource I’ve come across.</p>
 <p>To run the spider, navigate the console to the <code>spiders</code> folder and run spider like below. This will print the output to a json file called <code>output_showtimes.json</code>:</p>
-<pre class="{bash}"><code>cd belcourt/spiders
-scrapy runspider showtimes.py -O output_showtimes.json</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> belcourt/spiders</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scrapy</span> runspider showtimes.py <span class="at">-O</span> output_showtimes.json</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>You can see what this json file looks like in my GitHub repository.</p>
 <p>Voila! Easy! Now we need to take the data from this json file and turn it into a fairly attractive jpg.</p>
 </section>
 <section id="format-the-output-into-an-image" class="level1">
 <h1>Format the output into an image</h1>
 <p>Converting this json into a jpg mostly involved getting familiar with the <code>Pillow</code> python package. It can be installed like so:</p>
-<pre class="{bash}"><code>pip install Pillow</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install Pillow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 <p>The script I wrote is called <code>belcourt_generate_image.py</code>, and you can find it in the GitHub repository.</p>
 <p>First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame">“Getting Started with Inky Frame”</a> resource. I read the fonts directly from ttf files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my output.</p>
 <p>The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg must not be progressive. The frame can’t handle it otherwise for some reason:</p>
-<div class="cell" data-execution_count="2">
+<div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>background.save(<span class="st">'result.jpg'</span>, progressive <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Now that we’ve got a jpg, time to get it on the screen!</p>
 </section>
 <section id="load-image-into-inky-frame" class="level1">
 <h1>Load image into Inky Frame</h1>
-<p>Here is where we start getting into slightly uncharted territory.</p>
-<p>https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images</p>
+<p>Here is where we start getting into slightly uncharted territory. Pimoroni provides some nice guides and templates for displaying content on the screen. I first followed <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images">this guide</a> to display a static image on the screen that was loaded directly into memory. That’s not good enough though, because we need the screen to load the jpg via the web. Luckily they have <a href="https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py">another example</a> that does something similar. I adapted this script into my own version <code>showtimes_from_web.py</code>, available in the GitHub repository. This script requires wifi credentials saved in a <code>secrets.py</code> file, as described in the Pimoroni guide above. It also requires a <code>network_manager.py</code> file, available from <a href="https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common">Pimoroni’s example GitHub</a>. It also requires a micro SD card be installed, which luckily comes with the Inky Frame.</p>
+<p>Most importantly, the script needs a URL to access the image from. First I tried to use the link to the jpg in the repository: <code>https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true</code>. However this link leads to a redirect, which the <code>urllib</code> micropython package used by the Inky Frame cannot handle. Therefore we need a stable, direct link to the jpg. Luckily GitHub offers the ability to create a webpage for your repository using GitHub Pages. This can be configured by going to the settings for the repository, then going to “Pages”. I chose to use “GitHub Actions” as the source and the “main” branch as the branch to publish to. By default <code>README.md</code> will be used as the main page for the resulting site. Link to the jpg in the <code>README</code> like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># inky-frame</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>Code powering my shiny new Inky Frame</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>Here is the latest output:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="al">![Image with latest showtimes from the Belcourt Theatre](belcourt/result.jpg)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This will load the jpg to the GitHub Page, and then you can copy the jpg link from there for use in the <code>showtimes_from_web.py</code> script.</p>
+</section>
+<section id="automate-to-run-daily" class="level1">
+<h1>Automate to run daily</h1>
 <p>load jpg to inky frame</p>
 <p>https://www.python-engineer.com/posts/run-python-github-actions/ https://crontab.guru</p>
 <p>GitHub Actions</p>
 <p>Settings &gt; Actions &gt; General &gt; Workflow Permissions &gt; Read and write permissions</p>
-<p>Use pimoroni example as basis for loading to screen: https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py</p>
+<p>Use pimoroni example as basis for loading to screen:</p>
 <p>tried to load directly from raw jpg output in github repo, doesn’t work–gives “can’t read jpg” error</p>
 <p>trying to load from a different website…..-&gt; unoptimized version just gets stuck and doesn’t finish, using optimized version does work!!!!</p>
 <p>link to github output -&gt; works! but repo must be public! (DUH)</p>
@@ -268,6 +290,16 @@ scrapy runspider showtimes.py -O output_showtimes.json</code></pre>
 <p>also works using the image copy of unoptimized version. so not sure why it wasn’t working before…..</p>
 <p>embedding an iframe to jpg link doesn’t work</p>
 <p>create github pages on inky frame repo and try to link to it from there -&gt; works! this seems like it would be the best final solution</p>
+<p>need to adjust the github pages to trigger on each new commit found this blog wanting to do the same thing: https://jahed.dev/2021/04/24/triggering-github-actions-from-commits-by-other-actions/ geting ssh key: https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent setting repo secret: https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions found email for actions-user by checking a job that ran and checkign otuput of “commit files” step: action@github.com</p>
+<p>couldn’ tget the sshkey thing to work, so will just schedule the action for after the other action finishes using cron</p>
+<p>actually tried again, SSH using my email, making sure to paste all “as is” - includign —BEGINNING — and —ENDING—- lines in private key, and the empty new line -&gt; works! and hopefully should work when the spider runs, because according to this the email doesn’t matter (it’s just a comment): https://askubuntu.com/questions/801997/purpose-of-email-at-the-end-of-ssh-public-key</p>
+<p>SSH didn’t work, bring back schedule. had to completely delete SSH deploy key and secret for the github pages to update again</p>
+<p>Set showtimes_from_web.py script to run on startup by linking to it within main.py</p>
+<p>on battery power =&gt; turning on and pressing a button causes main.py to run, therefore refreshing the image</p>
+<p>how to get have main.py run daily on battery power? tried adding inky_frame.sleep_for(1) to main.py, but that doesn’t trigger another run of main.py. Tried adding this to the showtimes script itself, also didnt work. try running another gc.collect() at the en dof showtimes script, also didn’t work. tried to find a way to close a jpeg, doesn’t seem to be needed because it looks like decode contains a closing function</p>
+<p>putting sleep. functionb efore showtimes does indeed start a refresh, so having at the end of main.py should work . so seems like there is some issue with the script fully finishing</p>
+<p>Also tried this: https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython# clearly timer is working but it doesn’t spark a refresh. points to another issue with showtimes sccript fully finishing</p>
+<p>deleted teh file state.json by using clear_state in teh console which looks like it’s used by the original main.py to remember. which example script to run. after doing this, the busy symbol goes away and having the sleep command at the end of main.py seems to work!!!!!!!!!!!! trying also adding clear_state() to main.py to make sure it’s deleted before and after runtime. this doesn’t seem to work. but we are getting closer…….next try not running app wiht launch_app but back to original way</p>
 
 
 </section>
