@@ -207,7 +207,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p>I’m a flawed human being and therefore susceptible to ads I receive on the internet. One day I was scrolling and stumbled upon this little gadget by Pimoroni: the <a href="https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787">Inky Frame 7.3"</a>, a fun little e-ink screen that you can program with micropython. I bought it without much a plan for what I would use it for, but thought it would be a fun excuse to practice my python skills. I soon got the idea to combine my loves: I spend all my free time and money at the <a href="https://www.belcourt.org">Belcourt Theatre</a> in Nashville, and thought it would be cool to use the screen as a little display that shows the showtimes for the day.</p>
+<p>I’m a flawed human being and therefore susceptible to ads I receive on the internet. One day I was scrolling and stumbled upon this little gadget by Pimoroni: the <a href="https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787">Inky Frame 7.3”</a>, a fun little e-ink screen that you can program with micropython. I bought it without much a plan for what I would use it for, but thought it would be a fun excuse to practice my python skills. I soon got the idea to combine my loves: I spend all my free time and money at the <a href="https://www.belcourt.org">Belcourt Theatre</a> in Nashville, and thought it would be cool to use the screen as a little display that shows the showtimes for the day.</p>
 <p>Accomplishing this means several things have to happen:</p>
 <ol type="1">
 <li>Webscrape the showtimes from the theater’s website</li>
@@ -303,7 +303,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>In order to see if the <code>sleep_for()</code> function does actually start a refresh, I tried putting it at the beginning of the <code>main.py</code> function instead of at the end. It does indeed trigger a refresh of <code>main.py</code>, so that indicated that there is some issue with the <code>showtimes_from_web.py</code> fully finishing. Another indicator that the script isn’t fully finishing is that the busy symbol on the screen doesn’t go away after the screen is refreshed.</p>
 <p>I also tried following <a href="https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#">this blog using timers</a> but this also didn’t work. I could see the timer was working but it didn’t spark a refresh, which was more evidence that there is an issue with the showtimes script fully finishing.</p>
 <p>Then I noticed that there was a file on my inky frame called <code>state.json</code> that seemed to indicate the script was continuing to run. I tried deleting this file by using <code>inky_helper.clear_state()</code>. the console. After doing this and including <code>sleep_for()</code> at the end of <code>main.py</code>, I was able to trigger a refresh when it was plugged in to USB power! But on battery power, it still didn’t work.</p>
-<p>After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the <a href="https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26">Pimoroni forums</a> and in their [GitHub issues](https://github.com/pimoroni/pimoroni-pico/issues/866. Someone has released a firmware patch that is supposed to fix the issue, but I haven’t tried it yet. I’ll update this post if I do.</p>
+<p>After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the <a href="https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26">Pimoroni forums</a> and in their <a href="https://github.com/pimoroni/pimoroni-pico/issues/866">GitHub issues</a>. In that thread someone posts a patch for micropython that they say solves the issue. I tried installing <a href="https://github.com/w3stbam/pimoroni-pico/releases/">this patch</a>, and it does seem like it prevents the showtimes script from getting stuck and not fully finishing. However, after running <code>sleep_for()</code>, the script just stops and doesn’t start <code>main.py</code> from the beginning as I want.</p>
+<p>I reread the thread on the forum a few times and noticed that the original poster actually executes their <code>graphics.update()</code> and <code>sleep_for()</code> within a <code>while</code> loop. When I add this loop to my own script, like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#updated main.py</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> inky_frame</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(<span class="st">"showtimes_from_web.py"</span>) <span class="im">as</span> f:</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">exec</span>(f.read())</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    inky_frame.sleep_for(<span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>…it does successfully cause a refresh after the screen sleeps! We’re getting closer! However after the first refresh, I got a strange <code>EPERM</code> error. After further copying the techniques of the original poster and adding some error logging to my scripts, I saw the error was occurring at the <code>uos.mount()</code> command at the second run-through. I found the <a href="https://docs.micropython.org/en/v1.15/library/uos.html">documentation for <code>uos</code></a>, and saw that <code>uos.mount()</code> throws this <code>EPERM</code> error when the file system is already mounted. I tried adding a <code>uos.umount()</code> command at the very end of the <code>showtimes_from_web.py</code> script, and this seems to have solved the issue! The screen refreshes continuously!</p>
+<p>Finally, the moment of truth…does it refresh continuously when on battery power? I unplug the frame, turn on the battery pack, perform a reset (by holding down the A, E, and reset buttons), and wait…and it works! The screen refreshes on its own!</p>
+<center>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://media.tenor.com/Z2HxUamVZTMAAAAM/baby-cute.gif" class="img-fluid figure-img" alt="Gif of baby pumping his fists screaming YES!"></p>
+<figcaption class="figure-caption">It me</figcaption>
+</figure>
+</div>
+</center>
+<p>Hallelujah! Finally I’ll be able to sleep at night.</p>
+<p>Lastly, I increase the sleep time to 60 minutes with <code>sleep_for(60)</code>. Hopefully this doesn’t drain the battery too quickly. I may further increase it later.</p>
 
 
 </section>

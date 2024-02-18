@@ -12,7 +12,7 @@ execute:
     eval: false
 ---
 
-I'm a flawed human being and therefore susceptible to ads I receive on the internet. One day I was scrolling and stumbled upon this little gadget by Pimoroni: the [Inky Frame 7.3\"](https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787), a fun little e-ink screen that you can program with micropython. I bought it without much a plan for what I would use it for, but thought it would be a fun excuse to practice my python skills. I soon got the idea to combine my loves: I spend all my free time and money at the [Belcourt Theatre](https://www.belcourt.org) in Nashville, and thought it would be cool to use the screen as a little display that shows the showtimes for the day.
+I'm a flawed human being and therefore susceptible to ads I receive on the internet. One day I was scrolling and stumbled upon this little gadget by Pimoroni: the [Inky Frame 7.3"](https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787), a fun little e-ink screen that you can program with micropython. I bought it without much a plan for what I would use it for, but thought it would be a fun excuse to practice my python skills. I soon got the idea to combine my loves: I spend all my free time and money at the [Belcourt Theatre](https://www.belcourt.org) in Nashville, and thought it would be cool to use the screen as a little display that shows the showtimes for the day.
 
 Accomplishing this means several things have to happen:
 
@@ -80,7 +80,7 @@ Converting this json into a jpg mostly involved getting familiar with the `Pillo
 pip install Pillow
 ```
 
-The script I wrote is called `belcourt_generate_image.py`, and you can find it in the GitHub repository. 
+The script I wrote is called `belcourt_generate_image.py`, and you can find it in the GitHub repository.
 
 First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their ["Getting Started with Inky Frame"](https://learn.pimoroni.com/article/getting-started-with-inky-frame) resource. I read the fonts directly from ttf files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my output.
 
@@ -94,7 +94,7 @@ Now that we've got a jpg, time to get it on the screen!
 
 # Load image into Inky Frame
 
-Here is where we start getting into slightly uncharted territory. Pimoroni provides some nice guides and templates for displaying content on the screen. I first followed [this guide](https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images) to display a static image on the screen that was loaded directly into memory. That's not good enough though, because we need the screen to load the jpg via the web. Luckily they have [another example](https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py) that does something similar. I adapted this script into my own version `showtimes_from_web.py`, available in the GitHub repository. This script requires wifi credentials saved in a `secrets.py` file, as described in the Pimoroni guide above. It also requires a `network_manager.py` file, available from [Pimoroni's example GitHub](https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common). It also requires a micro SD card be installed, which luckily comes with the Inky Frame. 
+Here is where we start getting into slightly uncharted territory. Pimoroni provides some nice guides and templates for displaying content on the screen. I first followed [this guide](https://learn.pimoroni.com/article/getting-started-with-inky-frame#displaying-images) to display a static image on the screen that was loaded directly into memory. That's not good enough though, because we need the screen to load the jpg via the web. Luckily they have [another example](https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/examples/inky_frame/inky_frame_xkcd_daily.py) that does something similar. I adapted this script into my own version `showtimes_from_web.py`, available in the GitHub repository. This script requires wifi credentials saved in a `secrets.py` file, as described in the Pimoroni guide above. It also requires a `network_manager.py` file, available from [Pimoroni's example GitHub](https://github.com/pimoroni/pimoroni-pico/tree/main/micropython/examples/common). It also requires a micro SD card be installed, which luckily comes with the Inky Frame.
 
 Most importantly, the script needs a URL to access the image from. First I tried to use the link to the jpg in the repository: `https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/result.jpg?raw=true`. However this link leads to a redirect, which the `urllib` micropython package used by the Inky Frame cannot handle. Therefore we need a stable, direct link to the jpg. Luckily GitHub offers the ability to create a webpage for your repository using GitHub Pages. This can be configured by going to the settings for the repository, then going to "Pages". I chose to use "GitHub Actions" as the source and the "main" branch as the branch to publish to. By default `README.md` will be used as the main page for the resulting site. Link to the jpg in the `README` like so:
 
@@ -106,7 +106,7 @@ Here is the latest output:
 ![Image with latest showtimes from the Belcourt Theatre](belcourt/result.jpg)
 ```
 
-This will load the jpg to the GitHub Page, and then you can copy the jpg link from there for use in the `showtimes_from_web.py` script. 
+This will load the jpg to the GitHub Page, and then you can copy the jpg link from there for use in the `showtimes_from_web.py` script.
 
 # Automate to run daily
 
@@ -114,16 +114,15 @@ There are two aspects of automation that need to be implemented: automatically u
 
 ## Automate the jpg update
 
-GitHub Actions can be used to execute scripts on a schedule and make commits to the repository. I used [this guide](https://www.python-engineer.com/posts/run-python-github-actions/) to set up a GitHub Action that would run the spider and generate the jpg every day at 6am. The syntax for defining the schedule is called cron, and [this website](https://crontab.guru) is super helpful for figuring out how to configure the cron syntax to do what you want. 
+GitHub Actions can be used to execute scripts on a schedule and make commits to the repository. I used [this guide](https://www.python-engineer.com/posts/run-python-github-actions/) to set up a GitHub Action that would run the spider and generate the jpg every day at 6am. The syntax for defining the schedule is called cron, and [this website](https://crontab.guru) is super helpful for figuring out how to configure the cron syntax to do what you want.
 
 This GitHub Action requires giving the workflows read/write permissions by enabling: Settings \> Actions \> General \> Workflow Permissions \> Read and write permissions. The workflow is defined by a YAML file that I've called `.github/workflows/actions.yml` in the GitHub repository. The script runs the spider, runs the `belcourt_generate_image.py` script, and then commits the resulting jpg to the repository.
 
 A second GitHub Action is needed to update the GitHub Pages deployment every time the jpg is updated. By going to Settings \> Pages, you can configure the deployment of the webpage. GitHub automatically provides an Action template for you, and there is additional detail in the [documentation](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site). One change I made to the YAML file was to schedule the deployment to run after the first action that updates the jpg. I wanted to do this by triggering the deployment after the new changes were committed to the repository, but I couldn't get it to work. I found [this blog](https://jahed.dev/2021/04/24/triggering-github-actions-from-commits-by-other-actions/) that was trying to do the same thing, but I couldn't figure it out. Instead I scheduled the deployment to run half an hour after the first action, which should be enough time for it to finish.
 
-
 ## Automate the inky frame refresh
 
-The final step in this process is to automate the inky frame to refresh the image every day at a certain time. This is where I ran into some trouble. 
+The final step in this process is to automate the inky frame to refresh the image every day at a certain time. This is where I ran into some trouble.
 
 The inky frame will run anything saved as `main.py` when it starts up. If `main.py` is set to:
 
@@ -145,8 +144,34 @@ I also tried following [this blog using timers](https://www.upesy.com/blogs/tuto
 
 Then I noticed that there was a file on my inky frame called `state.json` that seemed to indicate the script was continuing to run. I tried deleting this file by using `inky_helper.clear_state()`. the console. After doing this and including `sleep_for()` at the end of `main.py`, I was able to trigger a refresh when it was plugged in to USB power! But on battery power, it still didn't work.
 
-After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the [Pimoroni forums](https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26) and in their [GitHub issues](https://github.com/pimoroni/pimoroni-pico/issues/866. Someone has released a firmware patch that is supposed to fix the issue, but I haven't tried it yet. I'll update this post if I do.
+After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the [Pimoroni forums](https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26) and in their [GitHub issues](https://github.com/pimoroni/pimoroni-pico/issues/866). In that thread someone posts a patch for micropython that they say solves the issue. I tried installing [this patch](https://github.com/w3stbam/pimoroni-pico/releases/), and it does seem like it prevents the showtimes script from getting stuck and not fully finishing. However, after running `sleep_for()`, the script just stops and doesn't start `main.py` from the beginning as I want.
 
+I reread the thread on the forum a few times and noticed that the original poster actually executes their `graphics.update()` and `sleep_for()` within a `while` loop. When I add this loop to my own script, like this:
 
+```{python}
+#updated main.py
+import inky_frame
+
+while True:
+  
+    with open("showtimes_from_web.py") as f:
+        exec(f.read())
+        
+    inky_frame.sleep_for(1)
+```
+
+...it does successfully cause a refresh after the screen sleeps! We're getting closer! However after the first refresh, I got a strange `EPERM` error. After further copying the techniques of the original poster and adding some error logging to my scripts, I saw the error was occurring at the `uos.mount()` command at the second run-through. I found the [documentation for `uos`](https://docs.micropython.org/en/v1.15/library/uos.html), and saw that `uos.mount()` throws this `EPERM` error when the file system is already mounted. I tried adding a `uos.umount()` command at the very end of the `showtimes_from_web.py` script, and this seems to have solved the issue! The screen refreshes continuously!
+
+Finally, the moment of truth...does it refresh continuously when on battery power? I unplug the frame, turn on the battery pack, perform a reset (by holding down the A, E, and reset buttons), and wait...and it works! The screen refreshes on its own!
+
+<center>
+
+![It me](https://media.tenor.com/Z2HxUamVZTMAAAAM/baby-cute.gif){fig-alt="Gif of baby pumping his fists screaming YES!"}
+
+</center>
+
+Hallelujah! Finally I'll be able to sleep at night.
+
+Lastly, I increase the sleep time to 60 minutes with `sleep_for(60)`. Hopefully this doesn't drain the battery too quickly. I may further increase it later.
 
 
