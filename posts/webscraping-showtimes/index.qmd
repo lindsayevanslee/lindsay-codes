@@ -1,8 +1,7 @@
 ---
 title: "Making my own box office sign with Scrapy and an Inky Frame"
-draft: true
 description: "The algorithm got me again"
-#date: "2024-02-19"
+date: "2024-02-19"
 image: inky_frame.jpg
 image-alt: "Inky Frame 7.3\" e-ink display with Belcourt Theatre showtimes"
 categories: [webscraping, python, raspberry pi, automation]
@@ -25,7 +24,7 @@ Here I go through what I did for each of these steps. All the code is available 
 
 # Web scrape the showtimes
 
-To web scrape the showtimes, I used the popular python package `Scrapy`. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called ["Web Scraping with Python"](https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282), which is where I first learned how to do this. She also has a book ["Web scraping with Python"](https://www.oreilly.com/library/view/web-scraping-with/9781491985564/) that is super informative. I'll leave most of the detail to her, but here is the gist:
+To web scrape the showtimes, I used the popular python package `Scrapy`. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called ["Web Scraping with Python"](https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282), which is where I first learned how to do this. She also has a book ["Web Scraping with Python"](https://www.oreilly.com/library/view/web-scraping-with/9781491985564/) that is super informative. I'll leave most of the detail to her, but here is the gist:
 
 First install `Scrapy`:
 
@@ -59,7 +58,7 @@ class BelcourtItem(scrapy.Item):
     shows = scrapy.Field()
 ```
 
-In the `showtimes.py` script in the `spiders` folder, specify which content from the website should be pulled into your output object of class `BelcourtItem`. This involves inspecting the html of the website and finding the relevant elements. See Ryan Mitchell's course/book for tips on how to do this. I also suggest learning more about searching for HTML elements with XPATH--[this YouTube video](https://www.youtube.com/watch?v=NhG__BL8zFo&list=PLSao4Yl0-ZqMIEG604vsNJc1i5X8YUDar&index=1) was the best resource I've come across.
+In the `showtimes.py` script in the `spiders` folder, specify which content from the website should be pulled into your output object of class `BelcourtItem`. This involves inspecting the HTML of the website and finding the relevant elements. See Ryan Mitchell's course/book for tips on how to do this. I also suggest learning more about searching for HTML elements with XPATH--[this YouTube video](https://www.youtube.com/watch?v=NhG__BL8zFo&list=PLSao4Yl0-ZqMIEG604vsNJc1i5X8YUDar&index=1) was the best resource I've come across.
 
 To run the spider, navigate the console to the `spiders` folder and run spider like below. This will print the output to a json file called `output_showtimes.json`:
 
@@ -84,7 +83,7 @@ The script I wrote is called `belcourt_generate_image.py`, and you can find it i
 
 First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their ["Getting Started with Inky Frame"](https://learn.pimoroni.com/article/getting-started-with-inky-frame) resource. I read the fonts directly from `ttf` files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my jpg output.
 
-The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg not be "progressive." The frame can't handle it otherwise, for some reason:
+The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg not be "progressive." I don't really know what that means, but the frame can't handle it otherwise for some reason:
 
 ```{python}
 background.save('result.jpg', progressive = False)
@@ -138,15 +137,15 @@ I did a bunch of searching, and there are some [helper functions](https://github
 
 I tried a bunch of things first. I tried adding `inky_frame.sleep_for(1)` to `main.py` which should theoretically cause it to go to sleep for a minute and then start back up, but that didn't trigger another run of `main.py`. I also tried adding this to the `showtimes_from_web.py` script itself, but that also didn't work. I tried running another `gc.collect()` at the end of `showtimes_from_web.py` in order to ensure that as much of the RAM was available as possible, but that also didn't work. I tried to find a way to "close" the jpg (the `showtimes_from_web.py` script has an `open_file` command, so I figured, maybe it needs to be closed again in order for the script to truly terminate), but it doesn't seem to be needed because it looks like the `decode` function called directly after `open_file` contains a closing function within it.
 
-In order to see if the `sleep_for()` function does actually start a refresh, I tried putting it at the beginning of the `main.py` function instead of at the end. It does indeed trigger a refresh of `main.py`, so that indicated that there is some issue with the `showtimes_from_web.py` fully finishing. Another indicator that the script isn't fully finishing is that the busy symbol on the screen doesn't go away after the screen is refreshed.
+In order to see if the `sleep_for()` function does wake the frame back up after it sleeps, I tried putting it at the beginning of the `main.py` function instead of at the end. It does indeed wake back up and continue running `main.py`. I thought there might be some issue with the `showtimes_from_web.py` fully finishing and perhaps the `sleep_for()` script never actually gets executed when it is at the end of `main.py`. One indicator that the script isn't fully finishing is that the busy symbol on the screen doesn't go away after the screen is refreshed.
 
-I also tried following [this blog using timers](https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#) but this also didn't work. I could see the timer was working but it didn't spark a refresh, which was more evidence that there is an issue with the showtimes script fully finishing.
+I tried following [this blog using timers](https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#) but this also didn't work. I could see the timer was working but it didn't spark a refresh, which was more evidence that there is an issue with the showtimes script fully finishing.
 
 Then I noticed that there was a file on my Inky Frame called `state.json` that seemed to indicate the script was continuing to run. I tried deleting this file by using `inky_helper.clear_state()`. the console. After doing this and including `sleep_for()` at the end of `main.py`, I was able to trigger a refresh when it was plugged in to USB power! But on battery power, it still didn't work.
 
 After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the [Pimoroni forums](https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26) and in their [GitHub issues](https://github.com/pimoroni/pimoroni-pico/issues/866). In that thread someone posts a patch for micropython that they say solves the issue. I tried installing [this patch](https://github.com/w3stbam/pimoroni-pico/releases/), and it does seem like it prevents the showtimes script from getting stuck and not fully finishing. However, after running `sleep_for()`, the script just stops and doesn't start `main.py` from the beginning as I want.
 
-I reread the thread on the forum a few times and noticed that the original poster actually executes their `graphics.update()` and `sleep_for()` within a `while` loop. When I add this loop to my own script, like this:
+I reread the thread on the forum a few times and noticed that the original poster actually executes their `graphics.update()` and `sleep_for()` commands within a `while` loop. When I add this loop to my own script, like this:
 
 ```{python}
 #updated main.py
@@ -170,10 +169,11 @@ Finally, the moment of truth...does it refresh continuously when on battery powe
 
 </center>
 
-Hallelujah! Finally I'll be able to sleep at night.
-
-Lastly, I increase the sleep time to 60 minutes with `sleep_for(60)`. Hopefully this doesn't drain the battery too quickly. I may further increase it later. 
-
 All of the scripts that I used on the Inky Frame (these are the only ones loaded--I deleted all other default examples and libraries that it comes with) are in the [inky_frame_scripts folder](https://github.com/lindsayevanslee/inky-frame/tree/main/belcourt/inky_frame_scripts) of the GitHub repository.
+As a last step, I increased the sleep time to 60 minutes with `sleep_for(60)`. Hopefully this doesn't drain the battery too quickly. I may further increase it later. 
+
+Now I'll finally be able to sleep at night. Until I come up with another silly idea.
+
+
 
 

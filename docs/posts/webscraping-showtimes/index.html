@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lindsay Lee">
+<meta name="dcterms.date" content="2024-02-19">
 <meta name="description" content="The algorithm got me again">
 
 <title>lindsay.codes - Making my own box office sign with Scrapy and an Inky Frame</title>
@@ -178,6 +179,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             </div>
     </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 19, 2024</p>
+      </div>
+    </div>
     
       
     </div>
@@ -219,7 +226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Here I go through what I did for each of these steps. All the code is available on <a href="https://github.com/lindsayevanslee/inky-frame">GitHub</a>.</p>
 <section id="web-scrape-the-showtimes" class="level1">
 <h1>Web scrape the showtimes</h1>
-<p>To web scrape the showtimes, I used the popular python package <code>Scrapy</code>. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called <a href="https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282">“Web Scraping with Python”</a>, which is where I first learned how to do this. She also has a book <a href="https://www.oreilly.com/library/view/web-scraping-with/9781491985564/">“Web scraping with Python”</a> that is super informative. I’ll leave most of the detail to her, but here is the gist:</p>
+<p>To web scrape the showtimes, I used the popular python package <code>Scrapy</code>. There is a really useful and fun course on LinkedIn Learning by Ryan Mitchell called <a href="https://www.linkedin.com/learning/web-scraping-with-python/hello-world-with-scrapy?u=103732282">“Web Scraping with Python”</a>, which is where I first learned how to do this. She also has a book <a href="https://www.oreilly.com/library/view/web-scraping-with/9781491985564/">“Web Scraping with Python”</a> that is super informative. I’ll leave most of the detail to her, but here is the gist:</p>
 <p>First install <code>Scrapy</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install Scrapy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -244,7 +251,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    date <span class="op">=</span> scrapy.Field()</span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    shows <span class="op">=</span> scrapy.Field()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>In the <code>showtimes.py</code> script in the <code>spiders</code> folder, specify which content from the website should be pulled into your output object of class <code>BelcourtItem</code>. This involves inspecting the html of the website and finding the relevant elements. See Ryan Mitchell’s course/book for tips on how to do this. I also suggest learning more about searching for HTML elements with XPATH–<a href="https://www.youtube.com/watch?v=NhG__BL8zFo&amp;list=PLSao4Yl0-ZqMIEG604vsNJc1i5X8YUDar&amp;index=1">this YouTube video</a> was the best resource I’ve come across.</p>
+<p>In the <code>showtimes.py</code> script in the <code>spiders</code> folder, specify which content from the website should be pulled into your output object of class <code>BelcourtItem</code>. This involves inspecting the HTML of the website and finding the relevant elements. See Ryan Mitchell’s course/book for tips on how to do this. I also suggest learning more about searching for HTML elements with XPATH–<a href="https://www.youtube.com/watch?v=NhG__BL8zFo&amp;list=PLSao4Yl0-ZqMIEG604vsNJc1i5X8YUDar&amp;index=1">this YouTube video</a> was the best resource I’ve come across.</p>
 <p>To run the spider, navigate the console to the <code>spiders</code> folder and run spider like below. This will print the output to a json file called <code>output_showtimes.json</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> belcourt/spiders</span>
@@ -261,7 +268,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The script I wrote is called <code>belcourt_generate_image.py</code>, and you can find it in the <a href="https://github.com/lindsayevanslee/inky-frame/blob/main/belcourt/belcourt_generate_image.py">GitHub repository</a>.</p>
 <p>First you read in the json output produced by the spider. Then specify some basics like the dimensions, title and subtitle and fonts. The dimensions match what is specified by Pimoroni in their <a href="https://learn.pimoroni.com/article/getting-started-with-inky-frame">“Getting Started with Inky Frame”</a> resource. I read the fonts directly from <code>ttf</code> files which are also loaded into the repository. I also loaded the Belcourt logo so I could use it in my jpg output.</p>
-<p>The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg not be “progressive.” The frame can’t handle it otherwise, for some reason:</p>
+<p>The rest of the script is essentially telling python where exactly to place the different elements of the image. Finally, the output is saved to a jpg. One important note is that it is important that the resulting jpg not be “progressive.” I don’t really know what that means, but the frame can’t handle it otherwise for some reason:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>background.save(<span class="st">'result.jpg'</span>, progressive <span class="op">=</span> <span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -301,11 +308,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>then my script <code>showtimes_from_web.py</code> will run on start-up, which pulls down the jpg from the GitHub page and displays it on the screen. The screen will start up when it is plugged in to USB power or when the battery pack is turned on. However, I don’t want to have to start up the screen manually each day, and I also don’t want to leave it plugged in all the time, so I need to find a way to get it to refresh itself while on battery power.</p>
 <p>I did a bunch of searching, and there are some <a href="https://github.com/pimoroni/pimoroni-pico/blob/main/micropython/modules_py/inky_frame.md#function-reference">helper functions</a> out there that seemed promising.</p>
 <p>I tried a bunch of things first. I tried adding <code>inky_frame.sleep_for(1)</code> to <code>main.py</code> which should theoretically cause it to go to sleep for a minute and then start back up, but that didn’t trigger another run of <code>main.py</code>. I also tried adding this to the <code>showtimes_from_web.py</code> script itself, but that also didn’t work. I tried running another <code>gc.collect()</code> at the end of <code>showtimes_from_web.py</code> in order to ensure that as much of the RAM was available as possible, but that also didn’t work. I tried to find a way to “close” the jpg (the <code>showtimes_from_web.py</code> script has an <code>open_file</code> command, so I figured, maybe it needs to be closed again in order for the script to truly terminate), but it doesn’t seem to be needed because it looks like the <code>decode</code> function called directly after <code>open_file</code> contains a closing function within it.</p>
-<p>In order to see if the <code>sleep_for()</code> function does actually start a refresh, I tried putting it at the beginning of the <code>main.py</code> function instead of at the end. It does indeed trigger a refresh of <code>main.py</code>, so that indicated that there is some issue with the <code>showtimes_from_web.py</code> fully finishing. Another indicator that the script isn’t fully finishing is that the busy symbol on the screen doesn’t go away after the screen is refreshed.</p>
-<p>I also tried following <a href="https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#">this blog using timers</a> but this also didn’t work. I could see the timer was working but it didn’t spark a refresh, which was more evidence that there is an issue with the showtimes script fully finishing.</p>
+<p>In order to see if the <code>sleep_for()</code> function does wake the frame back up after it sleeps, I tried putting it at the beginning of the <code>main.py</code> function instead of at the end. It does indeed wake back up and continue running <code>main.py</code>. I thought there might be some issue with the <code>showtimes_from_web.py</code> fully finishing and perhaps the <code>sleep_for()</code> script never actually gets executed when it is at the end of <code>main.py</code>. One indicator that the script isn’t fully finishing is that the busy symbol on the screen doesn’t go away after the screen is refreshed.</p>
+<p>I tried following <a href="https://www.upesy.com/blogs/tutorials/timer-raspberry-pi-pico-with-micropython#">this blog using timers</a> but this also didn’t work. I could see the timer was working but it didn’t spark a refresh, which was more evidence that there is an issue with the showtimes script fully finishing.</p>
 <p>Then I noticed that there was a file on my Inky Frame called <code>state.json</code> that seemed to indicate the script was continuing to run. I tried deleting this file by using <code>inky_helper.clear_state()</code>. the console. After doing this and including <code>sleep_for()</code> at the end of <code>main.py</code>, I was able to trigger a refresh when it was plugged in to USB power! But on battery power, it still didn’t work.</p>
 <p>After months of googling and trying new things, I saw that others have posted about having the same sort of issue on both the <a href="https://forums.pimoroni.com/t/inky-frame-not-refreshing-screen-on-battery-power-using-inky-frame-sleep-for/23174/26">Pimoroni forums</a> and in their <a href="https://github.com/pimoroni/pimoroni-pico/issues/866">GitHub issues</a>. In that thread someone posts a patch for micropython that they say solves the issue. I tried installing <a href="https://github.com/w3stbam/pimoroni-pico/releases/">this patch</a>, and it does seem like it prevents the showtimes script from getting stuck and not fully finishing. However, after running <code>sleep_for()</code>, the script just stops and doesn’t start <code>main.py</code> from the beginning as I want.</p>
-<p>I reread the thread on the forum a few times and noticed that the original poster actually executes their <code>graphics.update()</code> and <code>sleep_for()</code> within a <code>while</code> loop. When I add this loop to my own script, like this:</p>
+<p>I reread the thread on the forum a few times and noticed that the original poster actually executes their <code>graphics.update()</code> and <code>sleep_for()</code> commands within a <code>while</code> loop. When I add this loop to my own script, like this:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">#updated main.py</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> inky_frame</span>
@@ -327,9 +334,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </center>
-<p>Hallelujah! Finally I’ll be able to sleep at night.</p>
-<p>Lastly, I increase the sleep time to 60 minutes with <code>sleep_for(60)</code>. Hopefully this doesn’t drain the battery too quickly. I may further increase it later.</p>
-<p>All of the scripts that I used on the Inky Frame (these are the only ones loaded–I deleted all other default examples and libraries that it comes with) are in the <a href="https://github.com/lindsayevanslee/inky-frame/tree/main/belcourt/inky_frame_scripts">inky_frame_scripts folder</a> of the GitHub repository.</p>
+<p>All of the scripts that I used on the Inky Frame (these are the only ones loaded–I deleted all other default examples and libraries that it comes with) are in the <a href="https://github.com/lindsayevanslee/inky-frame/tree/main/belcourt/inky_frame_scripts">inky_frame_scripts folder</a> of the GitHub repository. As a last step, I increased the sleep time to 60 minutes with <code>sleep_for(60)</code>. Hopefully this doesn’t drain the battery too quickly. I may further increase it later.</p>
+<p>Now I’ll finally be able to sleep at night. Until I come up with another silly idea.</p>
 
 
 </section>
