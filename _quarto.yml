@@ -27,5 +27,8 @@ format:
     mainfont: Roboto Mono
     code-block-bg: "#eee8d5"
 
+resources:
+  - CNAME
+
 editor: visual
 
