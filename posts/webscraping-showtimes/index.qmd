@@ -113,7 +113,7 @@ There are two aspects of automation that need to be implemented: automatically u
 
 ## Automate the jpg update
 
-GitHub Actions can be used to execute scripts on a schedule and make commits to the repository. I used [this guide](https://www.python-engineer.com/posts/run-python-github-actions/) to set up a GitHub Action that would run the spider and generate the jpg every in the early morning. The syntax for defining the schedule is called cron, and [this website](https://crontab.guru) is super helpful for figuring out how to configure the cron syntax to do what you want.
+GitHub Actions can be used to execute scripts on a schedule and make commits to the repository. I used [this guide](https://www.python-engineer.com/posts/run-python-github-actions/) to set up a GitHub Action that would run the spider and generate the jpg every day in the early morning. The syntax for defining the schedule is called cron, and [this website](https://crontab.guru) is super helpful for figuring out how to configure the cron syntax to do what you want.
 
 This GitHub Action requires giving the workflows read/write permissions by enabling: Settings \> Actions \> General \> Workflow Permissions \> Read and write permissions. The workflow is defined by a YAML file that I've called `.github/workflows/actions.yml` in the GitHub repository. The script runs the spider, runs the `belcourt_generate_image.py` script, and then commits the resulting jpg to the repository.
 
