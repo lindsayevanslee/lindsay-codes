@@ -1,0 +1,39 @@
+---
+title: "Analyze health data from the Apple Watch"
+description: "Being #extra at my doctor's appointment"
+date: "2024-03-30"
+image: health-app-icon.jpg
+image-alt: "Logo of Apple Health app with cardiogram in background"
+categories: [health, apple watch, R, python]
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+I have a doctor's appointment soon, and I wanted to see if health data from my Apple Watch could help inform our conversation. The Health app has interesting visualizations out of the box, but I wanted to do something a tad more complicated.  
+
+To download the data from the Apple Health app on your iPhone, go to the Health app, click on your profile picture in the top right corner, and select "Export All Health Data". This will create a zip file that you can share with yourself. Next download the zip file and extract the contents. The important file in this extract is `export.xml`. I have this file saved in a folder `data/apple_health_export` in my [GitHub repository](https://github.com/lindsayevanslee/apple-watch). I have the `data` folder in the `.gitignore` file so that the data is not uploaded to this GitHub repository.
+
+It's not super easy to work with the data in xml format, so I wanted to convert this data to csv format. Luckily I found [someone else's code](https://gist.github.com/hoffa/936db2bb85e134709cd263dd358ca309) to do exactly this. I saved their parsing function as `convert_xml_to_csv.py` in my [GitHub repository](https://github.com/lindsayevanslee/apple-watch) for this analysis.
+
+To see the xml data as json within the terminal, run the following command in the Terminal:
+
+``` bash
+python convert_xml_to_csv.py data/apple_health_export/export.xml
+```
+
+To convert the xml data to a csv file, run the following command in the Terminal:
+
+``` bash
+python convert_xml_to_csv.py data/apple_health_export/export.xml | jq -r '[.startDate, .endDate, .type, .unit, .value] | @csv' > data/apple_health_export/export.csv
+```
+
+This requires the JSON parser `jq` to be installed. I [installed jq via Homebrew](https://stackoverflow.com/questions/37668134/how-to-install-jq-on-mac-on-the-command-line) on my Mac with: `brew install jq`.
+
+With the data in a usable format, it's easy to make all kinds of nice graphs. I have a couple examples in my script `print_spo2_graph.R` in the repository. The pdf output is saved to an `output` folder which is also in `.gitignore` (sorry, nosy nellies!)
+
+Now I'm all ready for my appointment. I'm sure my doctor will think this is useful and not a waste of everyone's time.
+
+
+

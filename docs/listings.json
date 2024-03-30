@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/apple-watch/index.html",
       "/posts/webscraping-showtimes-update/index.html",
       "/posts/webscraping-showtimes/index.html",
       "/posts/power-bi-custom-map/index.html",
