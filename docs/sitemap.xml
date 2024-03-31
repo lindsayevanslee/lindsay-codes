@@ -2,34 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lindsay.codes/about.html</loc>
-    <lastmod>2024-03-30T21:40:47.084Z</lastmod>
+    <lastmod>2024-03-31T23:19:01.226Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/apple-watch/index.html</loc>
-    <lastmod>2024-03-30T21:40:45.394Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lindsay.codes/posts/font-design/index.html</loc>
-    <lastmod>2024-03-30T21:40:42.676Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lindsay.codes/posts/webscraping-showtimes/index.html</loc>
-    <lastmod>2024-03-30T21:40:41.210Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lindsay.codes/posts/webscraping-showtimes-update/index.html</loc>
-    <lastmod>2024-03-30T21:40:40.138Z</lastmod>
+    <lastmod>2024-03-31T23:18:59.503Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/power-bi-custom-map/index.html</loc>
-    <lastmod>2024-03-30T21:40:42.038Z</lastmod>
+    <lastmod>2024-03-31T23:18:55.300Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/rstudio-code-snippets/index.html</loc>
+    <lastmod>2024-03-31T23:18:53.229Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/webscraping-showtimes-update/index.html</loc>
+    <lastmod>2024-03-31T23:18:52.539Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/webscraping-showtimes/index.html</loc>
+    <lastmod>2024-03-31T23:18:54.251Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/font-design/index.html</loc>
+    <lastmod>2024-03-31T23:18:55.921Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/webscraping-screenshots/index.html</loc>
-    <lastmod>2024-03-30T21:40:44.774Z</lastmod>
+    <lastmod>2024-03-31T23:18:59.048Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/index.html</loc>
-    <lastmod>2024-03-30T21:40:46.689Z</lastmod>
+    <lastmod>2024-03-31T23:19:52.168Z</lastmod>
   </url>
 </urlset>

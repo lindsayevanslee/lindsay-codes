@@ -1,0 +1,150 @@
+---
+title: "Get started with conda"
+description: "I've put off learning this for too long"
+date: ""
+draft: true
+#image: health-app-icon.jpg
+image-alt: ""
+categories: [python, conda, workflow]
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+
+conda vs venv? 
+https://www.reddit.com/r/datascience/comments/rapwvc/conda_vs_venv/
+https://jakevdp.github.io/blog/2016/08/25/conda-myths-and-misconceptions/
+
+anaconda or miniconda?
+
+
+https://njfberg.medium.com/macbook-setup-for-a-ml-engineer-using-homebrew-6ba183773d19
+
+brew install --cask miniconda
+conda init zsh
+
+restart terminal
+
+create environment in VSCode:
+https://code.visualstudio.com/docs/python/environments
+
+says it should use the requiremnets file automatically, but it didn't for me
+tried to create an environment in the command line myself using
+
+conda install --file requirements.txt
+
+and it still couldn't find the packages. Asked GitHub copilot, and it said it may be I need to add a channel. so added conda-forge and that removed this error, and gave error for only 2 packages
+
+conda config --add channels conda-forge
+
+https://stackoverflow.com/questions/42309333/explanation-of-different-conda-channels
+
+
+
+
+
+(inkyenv) lindsaylee@lindsays-mbp-2 inky-frame % conda install --file requirements.txt
+Channels:
+ - defaults
+Platform: osx-64
+Collecting package metadata (repodata.json): done
+Solving environment: failed
+
+LibMambaUnsatisfiableError: Encountered problems while solving:
+  - nothing provides requested asttokens 2.2.1
+  - nothing provides requested charset-normalizer 3.1.0
+  - nothing provides requested comm 0.1.3
+  - nothing provides requested contourpy 1.0.7
+  - nothing provides requested executing 1.2.0
+  - nothing provides requested fonttools 4.49.0
+  - nothing provides requested ipykernel 6.23.1
+  - nothing provides requested ipython 8.14.0
+  - nothing provides requested jedi 0.18.2
+  - nothing provides requested jupyter_client 8.2.0
+  - nothing provides requested platformdirs 3.5.3
+  - nothing provides requested prompt-toolkit 3.0.38
+  - nothing provides requested psutil 5.9.5
+  - nothing provides requested pure-eval 0.2.2
+  - nothing provides requested stack-data 0.6.2
+  - nothing provides requested tornado 6.4
+  - nothing provides requested traitlets 5.9.0
+  - nothing provides requested urllib3 2.2.0
+  - nothing provides requested wcwidth 0.2.6
+  - package appnope-0.1.3-py312hecd8cb5_0 requires python >=3.12,<3.13.0a0, but none of the providers can be installed
+
+Could not solve for environment specs
+The following packages are incompatible
+├─ appnope 0.1.3  is installable and it requires
+│  └─ python >=3.12,<3.13.0a0 , which can be installed;
+├─ asttokens 2.2.1  does not exist (perhaps a typo or a missing channel);
+├─ charset-normalizer 3.1.0  does not exist (perhaps a typo or a missing channel);
+├─ comm 0.1.3  does not exist (perhaps a typo or a missing channel);
+├─ contourpy 1.0.7  does not exist (perhaps a typo or a missing channel);
+├─ executing 1.2.0  does not exist (perhaps a typo or a missing channel);
+├─ fonttools 4.49.0  does not exist (perhaps a typo or a missing channel);
+├─ ipykernel 6.23.1  does not exist (perhaps a typo or a missing channel);
+├─ ipython 8.14.0  does not exist (perhaps a typo or a missing channel);
+├─ jedi 0.18.2  does not exist (perhaps a typo or a missing channel);
+├─ jupyter_client 8.2.0  does not exist (perhaps a typo or a missing channel);
+├─ jupyter_core 5.3.0  is not installable because there are no viable options
+│  ├─ jupyter_core 5.3.0 would require
+│  │  └─ python >=3.8,<3.9.0a0 , which conflicts with any installable versions previously reported;
+│  ├─ jupyter_core 5.3.0 would require
+│  │  └─ python >=3.10,<3.11.0a0 , which conflicts with any installable versions previously reported;
+│  ├─ jupyter_core 5.3.0 would require
+│  │  └─ python >=3.11,<3.12.0a0 , which conflicts with any installable versions previously reported;
+│  └─ jupyter_core 5.3.0 would require
+│     └─ python >=3.9,<3.10.0a0 , which conflicts with any installable versions previously reported;
+├─ platformdirs 3.5.3  does not exist (perhaps a typo or a missing channel);
+├─ prompt-toolkit 3.0.38  does not exist (perhaps a typo or a missing channel);
+├─ psutil 5.9.5  does not exist (perhaps a typo or a missing channel);
+├─ pure-eval 0.2.2  does not exist (perhaps a typo or a missing channel);
+├─ stack-data 0.6.2  does not exist (perhaps a typo or a missing channel);
+├─ tornado 6.4  does not exist (perhaps a typo or a missing channel);
+├─ traitlets 5.9.0  does not exist (perhaps a typo or a missing channel);
+├─ urllib3 2.2.0  does not exist (perhaps a typo or a missing channel);
+└─ wcwidth 0.2.6  does not exist (perhaps a typo or a missing channel).
+
+(inkyenv) lindsaylee@lindsays-mbp-2 inky-frame % conda config --add channels conda-forge
+(inkyenv) lindsaylee@lindsays-mbp-2 inky-frame % conda install --file requirements.txt  
+Channels:
+ - conda-forge
+ - defaults
+Platform: osx-64
+Collecting package metadata (repodata.json): done
+Solving environment: failed
+
+PackagesNotFoundError: The following packages are not available from current channels:
+
+  - pure-eval==0.2.2
+  - stack-data==0.6.2
+
+Current channels:
+
+  - https://conda.anaconda.org/conda-forge
+  - defaults
+
+To search for alternate channels that may provide the conda package you're
+looking for, navigate to
+
+    https://anaconda.org
+
+and use the search bar at the top of the page.
+
+
+
+
+couldn't find channels for these two packages, so need to install them with pip
+wasn't sure how to specify that with a requirements.txt file, but it seems like it would be better with a conda environment file, so asked github copilot to help me convert my rquirements.txt with environment.yml
+
+conda env create -f environment.yml
+
+https://docs.conda.io/projects/conda/en/4.6.1/user-guide/tasks/manage-environments.html#create-env-file-manually
+
+after making sure I specified version for pip dependencies with == instad of =, it worked!
+
+right now, keeping both requirments.txt and environment.yml because requirments.txt is used in the github actions I have set up. I also notice my actions uses different python version than I'm using locally. i'll worry about that later
+
+VSCode point and click way to create conda environment also recognizes the environment.yml file instead of the requirements file

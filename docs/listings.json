@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/rstudio-code-snippets/index.html",
       "/posts/apple-watch/index.html",
       "/posts/webscraping-showtimes-update/index.html",
       "/posts/webscraping-showtimes/index.html",

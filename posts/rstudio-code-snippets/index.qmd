@@ -1,0 +1,93 @@
+---
+title: "I love RStudio code snippets"
+description: "I don't love copy/pasting"
+date: "2024-03-31"
+image: header.png
+image-alt: "Screenshot showing what happens when you begin to type the header snippet name in RStudio"
+categories: [rstudio, r, quarto, workflow]
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+Just a quick tip that keeps your life organized and saves you the pain of copy/pasting from old scripts: [RStudio](https://posit.co/products/open-source/rstudio/) allows you to make your own custom shortcuts to generate code snippets that you use often. You can see all the code snippets and make your own by going to Tools \> Edit Code Snippets in the RStudio IDE. From there you select the file type that the snippet is used for, add/remove/edit the snippets, and hit save.
+
+I have two main uses for these snippets: to create a header and outline for my R scripts, and to create the YAML header for quarto blog posts (like this one!)
+
+My snippet for an R script header looks like this:
+
+```{bash}
+snippet header
+	## ------------------------------------------------------ ##
+	##
+	## Purpose of script: ${1:purpose}
+	##
+	## Author: Lindsay Lee
+	## Email: me@lindsayevanslee.com
+	##
+	## Date Created: `r paste(Sys.Date())`
+	##
+	##
+	## ------------------------------------------------------ ##
+	##
+	## Notes:
+	##    - ${2:note}
+	##   
+	##
+	## ------------------------------------------------------ ##
+	
+	
+	
+	
+	## setup --------------------------------
+	
+	
+	
+	
+	
+	
+	## read data ----------------------------
+	
+	
+	
+	
+	
+	
+	## wrangle data -------------------------
+	
+	
+	
+	
+	
+	
+	## print output -------------------------
+	
+	
+
+```
+
+Each snippet starts with `snippet` and then the name of the snippet--in this case, `header`. Then below it on indented lines you write the code that makes up the snippet. You can also embed variables like I have done for the Purpose and the Notes--these will be areas that your cursor will jump to when the snippet generates. You can also add in-line R code, like I've done for the date. Then in any R script you can execute this R script by beginning to type the snippet name, and then hitting Tab when it comes up on the text prediction options:
+
+![Text prediction options? Whatever this is called](header.png){fig-alt="Screenshot showing what happens when you begin to type the header snippet name in RStudio" width="408"}
+
+My snippet for the YAML header for a quarto blog post is like this:
+
+```{bash}
+snippet post
+	---
+	title: ""
+	description: ""
+	date: ""
+	draft: true
+	#image: 
+	image-alt: ""
+	categories: []
+	jupyter: python3
+	engine: knitr
+	execute:
+	    eval: false
+	---
+```
+
+This snippet needs to be saved under the Markdown filetype. Then in any qmd file, type the name of the snippet, hit Shift+Tab and the header will generate! I'll never need to google this nonsense ever again.
