@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/get-started-with-conda/index.html",
       "/posts/rstudio-code-snippets/index.html",
       "/posts/apple-watch/index.html",
       "/posts/webscraping-showtimes-update/index.html",

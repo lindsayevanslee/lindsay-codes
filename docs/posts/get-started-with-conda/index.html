@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lindsay Lee">
+<meta name="dcterms.date" content="2024-04-05">
 <meta name="description" content="I’ve put off learning this for too long">
 
 <title>lindsay.codes - Get started with conda</title>
@@ -21,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -138,6 +173,12 @@ ul.task-list li input[type="checkbox"] {
             </div>
     </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 5, 2024</p>
+      </div>
+    </div>
     
       
     </div>
@@ -155,41 +196,51 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>conda vs venv? https://www.reddit.com/r/datascience/comments/rapwvc/conda_vs_venv/ https://jakevdp.github.io/blog/2016/08/25/conda-myths-and-misconceptions/</p>
-<p>anaconda or miniconda?</p>
-<p>https://njfberg.medium.com/macbook-setup-for-a-ml-engineer-using-homebrew-6ba183773d19</p>
-<p>brew install –cask miniconda conda init zsh</p>
-<p>restart terminal</p>
-<p>create environment in VSCode: https://code.visualstudio.com/docs/python/environments</p>
-<p>says it should use the requiremnets file automatically, but it didn’t for me tried to create an environment in the command line myself using</p>
-<p>conda install –file requirements.txt</p>
-<p>and it still couldn’t find the packages. Asked GitHub copilot, and it said it may be I need to add a channel. so added conda-forge and that removed this error, and gave error for only 2 packages</p>
-<p>conda config –add channels conda-forge</p>
-<p>https://stackoverflow.com/questions/42309333/explanation-of-different-conda-channels</p>
-<p>(inkyenv) lindsaylee@lindsays-mbp-2 inky-frame % conda install –file requirements.txt Channels: - defaults Platform: osx-64 Collecting package metadata (repodata.json): done Solving environment: failed</p>
-<p>LibMambaUnsatisfiableError: Encountered problems while solving: - nothing provides requested asttokens 2.2.1 - nothing provides requested charset-normalizer 3.1.0 - nothing provides requested comm 0.1.3 - nothing provides requested contourpy 1.0.7 - nothing provides requested executing 1.2.0 - nothing provides requested fonttools 4.49.0 - nothing provides requested ipykernel 6.23.1 - nothing provides requested ipython 8.14.0 - nothing provides requested jedi 0.18.2 - nothing provides requested jupyter_client 8.2.0 - nothing provides requested platformdirs 3.5.3 - nothing provides requested prompt-toolkit 3.0.38 - nothing provides requested psutil 5.9.5 - nothing provides requested pure-eval 0.2.2 - nothing provides requested stack-data 0.6.2 - nothing provides requested tornado 6.4 - nothing provides requested traitlets 5.9.0 - nothing provides requested urllib3 2.2.0 - nothing provides requested wcwidth 0.2.6 - package appnope-0.1.3-py312hecd8cb5_0 requires python &gt;=3.12,&lt;3.13.0a0, but none of the providers can be installed</p>
-<p>Could not solve for environment specs The following packages are incompatible ├─ appnope 0.1.3 is installable and it requires │ └─ python &gt;=3.12,&lt;3.13.0a0 , which can be installed; ├─ asttokens 2.2.1 does not exist (perhaps a typo or a missing channel); ├─ charset-normalizer 3.1.0 does not exist (perhaps a typo or a missing channel); ├─ comm 0.1.3 does not exist (perhaps a typo or a missing channel); ├─ contourpy 1.0.7 does not exist (perhaps a typo or a missing channel); ├─ executing 1.2.0 does not exist (perhaps a typo or a missing channel); ├─ fonttools 4.49.0 does not exist (perhaps a typo or a missing channel); ├─ ipykernel 6.23.1 does not exist (perhaps a typo or a missing channel); ├─ ipython 8.14.0 does not exist (perhaps a typo or a missing channel); ├─ jedi 0.18.2 does not exist (perhaps a typo or a missing channel); ├─ jupyter_client 8.2.0 does not exist (perhaps a typo or a missing channel); ├─ jupyter_core 5.3.0 is not installable because there are no viable options │ ├─ jupyter_core 5.3.0 would require │ │ └─ python &gt;=3.8,&lt;3.9.0a0 , which conflicts with any installable versions previously reported; │ ├─ jupyter_core 5.3.0 would require │ │ └─ python &gt;=3.10,&lt;3.11.0a0 , which conflicts with any installable versions previously reported; │ ├─ jupyter_core 5.3.0 would require │ │ └─ python &gt;=3.11,&lt;3.12.0a0 , which conflicts with any installable versions previously reported; │ └─ jupyter_core 5.3.0 would require │ └─ python &gt;=3.9,&lt;3.10.0a0 , which conflicts with any installable versions previously reported; ├─ platformdirs 3.5.3 does not exist (perhaps a typo or a missing channel); ├─ prompt-toolkit 3.0.38 does not exist (perhaps a typo or a missing channel); ├─ psutil 5.9.5 does not exist (perhaps a typo or a missing channel); ├─ pure-eval 0.2.2 does not exist (perhaps a typo or a missing channel); ├─ stack-data 0.6.2 does not exist (perhaps a typo or a missing channel); ├─ tornado 6.4 does not exist (perhaps a typo or a missing channel); ├─ traitlets 5.9.0 does not exist (perhaps a typo or a missing channel); ├─ urllib3 2.2.0 does not exist (perhaps a typo or a missing channel); └─ wcwidth 0.2.6 does not exist (perhaps a typo or a missing channel).</p>
-<p>(inkyenv) lindsaylee@lindsays-mbp-2 inky-frame % conda config –add channels conda-forge (inkyenv) lindsaylee@lindsays-mbp-2 inky-frame % conda install –file requirements.txt<br>
-Channels: - conda-forge - defaults Platform: osx-64 Collecting package metadata (repodata.json): done Solving environment: failed</p>
-<p>PackagesNotFoundError: The following packages are not available from current channels:</p>
-<ul>
-<li>pure-eval==0.2.2</li>
-<li>stack-data==0.6.2</li>
-</ul>
-<p>Current channels:</p>
-<ul>
-<li>https://conda.anaconda.org/conda-forge</li>
-<li>defaults</li>
-</ul>
-<p>To search for alternate channels that may provide the conda package you’re looking for, navigate to</p>
-<pre><code>https://anaconda.org</code></pre>
-<p>and use the search bar at the top of the page.</p>
-<p>couldn’t find channels for these two packages, so need to install them with pip wasn’t sure how to specify that with a requirements.txt file, but it seems like it would be better with a conda environment file, so asked github copilot to help me convert my rquirements.txt with environment.yml</p>
-<p>conda env create -f environment.yml</p>
-<p>https://docs.conda.io/projects/conda/en/4.6.1/user-guide/tasks/manage-environments.html#create-env-file-manually</p>
-<p>after making sure I specified version for pip dependencies with == instad of =, it worked!</p>
-<p>right now, keeping both requirments.txt and environment.yml because requirments.txt is used in the github actions I have set up. I also notice my actions uses different python version than I’m using locally. i’ll worry about that later</p>
-<p>VSCode point and click way to create conda environment also recognizes the environment.yml file instead of the requirements file</p>
+<p>My python skills aren’t super strong yet, but they’re strong enough to know that environment management is key, and it’s an area I know next to nothing about. I figured it’s time to at least learn the basics.</p>
+<p>There seem to be two main tools for environment management in python: <code>conda</code> and <code>venv</code>. I tried to do a little bit of research to see what the pros and cons are of each. <a href="https://www.reddit.com/r/datascience/comments/rapwvc/conda_vs_venv/">This reddit thread</a> was useful, and <a href="https://jakevdp.github.io/blog/2016/08/25/conda-myths-and-misconceptions/">this blog post</a> linked to from that thread was helpful too. It seems like the main differences are that <code>venv</code>’s main purpose is for isolating a virtual environment, while <code>conda</code> provides more help managing packages for your project. It appears <code>conda</code> helps you by installing commonly used packages, which may not be suitable in industry/production settings. I’m just playing around and need all the help I can get, so I decided to take a crack at conda first.</p>
+<p>There are two flavors of <code>conda</code>: <code>anaconda</code> and <code>miniconda</code>. <code>anaconda</code> comes with a lot more packages and also an app to manage the packages. <code>miniconda</code> is more stripped-down. I decided to try <code>miniconda</code> first, because I didn’t like the idea of installing more apps on my computer.</p>
+<p>I’m on a Mac, and the savior for any amateur programmer on a Mac is <a href="https://brew.sh">Homebrew</a>, a wonderful package manager for macOS which makes it so much easier to install all the little programs and utilities needed to code stuff. I can’t remember all the things I’ve installed with it, but it always seems to be there to save the day when I’m having issues installing python or R packages. Luckily it saves the day here again: you can install <code>miniconda</code> with Homebrew as well. <a href="https://njfberg.medium.com/macbook-setup-for-a-ml-engineer-using-homebrew-6ba183773d19">This Medium article</a> helped me figure out how. All I needed to do was run this in the Terminal:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> miniconda</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init zsh</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then restart the Terminal. I tested the install worked by running <code>conda</code>, which didn’t return any errors, which is what I wanted to see.</p>
+<p>Now to try our first environment! I used my <a href="https://github.com/lindsayevanslee/inky-frame">inky-frame</a> project as a test case (check out my post about it <a href="../../posts/webscraping-showtimes/index.html">here</a>). I first wanted to try the more point-and-click way to <a href="https://code.visualstudio.com/docs/python/environments">create a python environment in VS Code</a>. It says by using the “Python: Create Environment” command from the Control Palette, it should automatically detect an existing <code>requirements.txt</code> file to install the packages you need to create the environment. I tried this first, but after trying to run a script in the new environment, I got “package not found” errors, meaning it didn’t seem to actually install the necessary packages listed in <code>requirements.txt</code>.</p>
+<p>Next I tried creating the <code>conda</code> environment using the command line by running:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install <span class="at">--file</span> requirements.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>But this still didn’t seem to install the packages. It gave a long error message like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">Channels:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> <span class="ex">-</span> defaults</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">Platform:</span> osx-64</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">Collecting</span> package metadata <span class="er">(</span><span class="ex">repodata.json</span><span class="kw">)</span><span class="bu">:</span> done</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Solving</span> environment: failed</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">LibMambaUnsatisfiableError:</span> Encountered problems while solving:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-</span> nothing provides requested asttokens 2.2.1</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="ex">-</span> nothing provides requested charset-normalizer 3.1.0</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="ex">...</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ex">Could</span> not solve for environment specs</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">The</span> following packages are incompatible</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="ex">├─</span> appnope 0.1.3  is installable and it requires</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>  └─ python <span class="op">&gt;</span>=3.12,<span class="op">&lt;</span>3.13.0a0 , which can be installed<span class="kw">;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="ex">├─</span> asttokens 2.2.1  does not exist <span class="er">(</span><span class="ex">perhaps</span> a typo or a missing channel<span class="kw">);</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="ex">...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>(where <code>...</code> means multiple lines of the same pattern for various other packages). I was stumped so I pasted this error into GitHub Copilot and asked what it meant. It told me I may need to add a <a href="https://stackoverflow.com/questions/42309333/explanation-of-different-conda-channels">“channel”</a> for <code>conda</code> to search in; I only had the <code>defaults</code> channel added, which didn’t seem to have all the packages I was asking for. It suggested I add the <code>conda-forge</code> channel. I did this by running:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels conda-forge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>After doing this, I tried to create the environment again, and I got a new but more promising error. This time it said there were only two packages it wasn’t able to install (<code>pure-eval==0.2.2</code> and <code>stack-data==0.6.2</code>). It suggested searching <a href="https://anaconda.org">https://anaconda.org</a> to see if I could find a channel they were in that I could add. I tried searching but couldn’t find any channels they were in.</p>
+<p>Luckily from the <a href="https://docs.conda.io/projects/conda/en/4.6.1/user-guide/tasks/manage-environments.html#create-env-file-manually"><code>conda</code> documentation</a> I saw that you can still install packages with <code>pip</code> while using <code>conda</code>. I wasn’t sure how to tell <code>conda</code> to use <code>pip</code> using a <code>requirements.txt</code> file, but it seemed like it was easier using a <code>environment.yml</code> file instead. I asked GitHub Copilot to help me convert my <code>requirements.txt</code> to a <code>environment.yml</code> file, then tried to create the environment again with:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>I still got an error, but luckily it was a small one: I needed to use single <code>=</code> for specifying versions for the <code>dependencies</code> in <code>environment.yml</code>, while I needed to use <code>==</code> for specifying versions for packages installed with <code>pip</code>. Fixing this, I reran the command, and finally I created a working <code>conda</code> environment! I also retried the point-and-click way to create an environment in VS Code, it also worked, automatically using the <code>environment.yml</code> file to install the necessary packages.</p>
+<p>For the moment I’m keeping both <code>requirements.txt</code> and <code>environment.yml</code> in my repo because <code>requirements.txt</code> is used in the GitHub Actions I have set up. I also noticed that my GitHub Actions use different python version than what I’m using locally in this new <code>conda</code> environment. But I’ll take a few moments to bask in my win and will worry about that later.</p>
 
 
 
