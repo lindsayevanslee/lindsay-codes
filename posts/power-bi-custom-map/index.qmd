@@ -4,7 +4,7 @@ description: "It took like 4 different programs but we did it."
 date: "2023-03-26"
 image: power-bi-map.png
 image-alt: "Screenshot of Power BI report page with custom map in an ArcGIS visual"
-categories: [maps, power bi, R]
+categories: [maps, power bi, r]
 execute: 
   eval: false
 ---
