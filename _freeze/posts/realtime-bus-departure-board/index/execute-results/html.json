@@ -1,0 +1,14 @@
+{
+  "hash": "eebf71e5b8daa4feeaf2c89a1e3c10d5",
+  "result": {
+    "markdown": "---\ntitle: \"Making a custom bus departure sign\"\ndescription: \"\"\ndate: \"\"\ndraft: true\n#image: \nimage-alt: \"\"\ncategories: []\njupyter: python3\nengine: knitr\nexecute:\n    eval: false\n---\n\n\nvideo loren sent me:\nhttps://www.bbc.com/news/av/uk-england-bristol-68617352\n\nmaybe i could do the same thing!\n\ngoogling what goes into the google maps data\n\ntwo kinds of feeds, static and realtime: https://developers.google.com/transit\n\nrepository of feeds: https://www.transit.land/operators/\n\nsearch for nashville, found the static feed: http://www.nashvillemta.org/GoogleExport/google_transit.zip\n\nand realtime feed: http://transitdata.nashvillemta.org/TMGTFSRealTimeWebService/vehicle/vehiclepositions.pb\n\ntried to google how to query the realtime feed but couldn't find any clear documentation or example project. turned to chat gpt, and it gave me some sample python code\n\nneed to get google maps API code, directions API\n\n\n1. download static trip information\n2. pull buses near me\n3. filter to which ones have not yet passed my place on their route\n4. calculate time to my place\n5. structure data for display\n6. set up automation\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

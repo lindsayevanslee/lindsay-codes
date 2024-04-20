@@ -1,0 +1,41 @@
+---
+title: "Making a custom bus departure sign"
+description: ""
+date: ""
+draft: true
+#image: 
+image-alt: ""
+categories: []
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+video loren sent me:
+https://www.bbc.com/news/av/uk-england-bristol-68617352
+
+maybe i could do the same thing!
+
+googling what goes into the google maps data
+
+two kinds of feeds, static and realtime: https://developers.google.com/transit
+
+repository of feeds: https://www.transit.land/operators/
+
+search for nashville, found the static feed: http://www.nashvillemta.org/GoogleExport/google_transit.zip
+
+and realtime feed: http://transitdata.nashvillemta.org/TMGTFSRealTimeWebService/vehicle/vehiclepositions.pb
+
+tried to google how to query the realtime feed but couldn't find any clear documentation or example project. turned to chat gpt, and it gave me some sample python code
+
+need to get google maps API code, directions API
+
+
+1. download static trip information
+2. pull buses near me
+3. filter to which ones have not yet passed my place on their route
+4. calculate time to my place
+5. structure data for display
+6. set up automation
+
