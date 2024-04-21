@@ -11,13 +11,18 @@ execute:
     eval: false
 ---
 
-_This is a follow-up to my previous post about creating my own movie showtimes board with an [inky frame](../webscraping-showtimes/index.qmd)._
+*This is a follow-up to my previous post about creating my own movie showtimes board with an [inky frame](../webscraping-showtimes/index.qmd).*
 
 The big question mark left after I beat the final boss of my inky frame project was how long the screen would continue to work without intervention. To date, here's what's happened so far.
 
 I finished the project on 2/19. On 2/29, the screen got stuck with the "thinking" light left on. I turned it off and back on and then reset the screen by pushing A + E + reset, and then it started working again. I figured this was some network issue that caused it to freeze up.
 
-I came back from a vacation in March, and saw that the screen was stuck on the showtimes for 3/12. The thinking light wasn't on this time. I checked the repository, and the showtime images were continuing to generate each day, so the problem was definitely with the screen itself. I tried to turn it on and off again and reset it, but that didn't fix the issue. This indicated to me the batteries had probably died. I changed the batteries on 3/20 and reset the screen, and it started working again. 
+I came back from a vacation in March, and saw that the screen was stuck on the showtimes for 3/12. The thinking light wasn't on this time. I checked the repository, and the showtime images were continuing to generate each day, so the problem was definitely with the screen itself. I tried to turn it on and off again and reset it, but that didn't fix the issue. This indicated to me the batteries had probably died. I changed the batteries on 3/20 and reset the screen, and it started working again.
 
-So this means that the batteries lasted for about 3 weeks worth of hourly refreshes. They weren't a totally fresh set of batteries because they're the same ones I used for all my testing, so it's hard to know exactly how long a totally fresh set would last. I also think that the refresh rate is probably too high, so I'm going to try reducing it to every 2 hours and see how that goes. 
+So this means that the batteries lasted for about 3 weeks worth of hourly refreshes. They weren't a totally fresh set of batteries because they're the same ones I used for all my testing, so it's hard to know exactly how long a totally fresh set would last. I also think that the refresh rate is probably too high, so I'm going to try reducing it to every 2 hours and see how that goes.
 
+# Update 2024-04-21
+
+More dead batteries on 4/17! So it seems like reducing the refresh rate to every 2 hours gave me about another week of screen time, 4 weeks total. 
+
+I'll try to reduce it further to every 12 hours and see what happens. Start the clock: recharged the batteries and reset the screen at 5:35pm today.
