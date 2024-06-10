@@ -2,42 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lindsay.codes/about.html</loc>
-    <lastmod>2024-04-21T22:48:40.068Z</lastmod>
+    <lastmod>2024-06-10T00:45:01.834Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/apple-watch/index.html</loc>
-    <lastmod>2024-04-21T22:48:38.340Z</lastmod>
+    <lastmod>2024-06-10T00:45:00.145Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/get-started-with-conda/index.html</loc>
-    <lastmod>2024-04-21T22:48:35.361Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lindsay.codes/posts/webscraping-showtimes/index.html</loc>
-    <lastmod>2024-04-21T22:48:32.589Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lindsay.codes/posts/webscraping-showtimes-update/index.html</loc>
-    <lastmod>2024-04-21T22:48:30.969Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lindsay.codes/posts/rstudio-code-snippets/index.html</loc>
-    <lastmod>2024-04-21T22:48:31.498Z</lastmod>
+    <lastmod>2024-06-10T00:44:56.815Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/power-bi-custom-map/index.html</loc>
-    <lastmod>2024-04-21T22:48:33.625Z</lastmod>
+    <lastmod>2024-06-10T00:44:54.677Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/webscraping-showtimes-update/index.html</loc>
+    <lastmod>2024-06-10T00:44:51.656Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/rstudio-code-snippets/index.html</loc>
+    <lastmod>2024-06-10T00:44:52.323Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/webscraping-showtimes/index.html</loc>
+    <lastmod>2024-06-10T00:44:53.806Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/github-codespaces/index.html</loc>
+    <lastmod>2024-06-10T00:44:55.186Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/font-design/index.html</loc>
-    <lastmod>2024-04-21T22:48:34.763Z</lastmod>
+    <lastmod>2024-06-10T00:44:56.192Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/webscraping-screenshots/index.html</loc>
-    <lastmod>2024-04-21T22:48:37.888Z</lastmod>
+    <lastmod>2024-06-10T00:44:59.688Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/index.html</loc>
-    <lastmod>2024-04-21T22:48:39.705Z</lastmod>
+    <lastmod>2024-06-10T00:45:01.382Z</lastmod>
   </url>
 </urlset>
