@@ -7,6 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lindsay Lee">
+<meta name="dcterms.date" content="2024-07-07">
+<meta name="description" content="Nashville’s transit system is bad but its data is not!">
 
 <title>lindsay.codes - Making a custom bus departure sign</title>
 <style>
@@ -114,7 +116,17 @@ ul.task-list li input[type="checkbox"] {
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Making a custom bus departure sign</h1>
-                      </div>
+                  <div>
+        <div class="description">
+          Nashville’s transit system is bad but its data is not!
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">raspberry pi</div>
+                <div class="quarto-category">google maps</div>
+              </div>
+                  </div>
   </div>
     
   
@@ -127,6 +139,12 @@ ul.task-list li input[type="checkbox"] {
             </div>
     </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 7, 2024</p>
+      </div>
+    </div>
     
       
     </div>
@@ -136,7 +154,22 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#transit-data" id="toc-transit-data" class="nav-link active" data-scroll-target="#transit-data">Transit data</a></li>
+  <li><a href="#code" id="toc-code" class="nav-link" data-scroll-target="#code">Code</a>
+  <ul class="collapse">
+  <li><a href="#collect_static_details.py" id="toc-collect_static_details.py" class="nav-link" data-scroll-target="#collect_static_details.py"><code>collect_static_details.py</code></a></li>
+  <li><a href="#collect_vehicles_on_route.py" id="toc-collect_vehicles_on_route.py" class="nav-link" data-scroll-target="#collect_vehicles_on_route.py"><code>collect_vehicles_on_route.py</code></a></li>
+  <li><a href="#find_vehicles_not_yet_passed.py" id="toc-find_vehicles_not_yet_passed.py" class="nav-link" data-scroll-target="#find_vehicles_not_yet_passed.py"><code>find_vehicles_not_yet_passed.py</code></a></li>
+  <li><a href="#calculate_eta.py" id="toc-calculate_eta.py" class="nav-link" data-scroll-target="#calculate_eta.py"><code>calculate_eta.py</code></a></li>
+  <li><a href="#create_board_image.py" id="toc-create_board_image.py" class="nav-link" data-scroll-target="#create_board_image.py"><code>create_board_image.py</code></a></li>
+  </ul></li>
+  <li><a href="#result" id="toc-result" class="nav-link" data-scroll-target="#result">Result</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -144,27 +177,90 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<p>video loren sent me: https://www.bbc.com/news/av/uk-england-bristol-68617352</p>
-<p>maybe i could do the same thing!</p>
-<p>googling what goes into the google maps data</p>
-<p>two kinds of feeds, static and realtime: https://developers.google.com/transit</p>
-<p>repository of feeds: https://www.transit.land/operators/</p>
-<p>search for nashville, found the static feed: http://www.nashvillemta.org/GoogleExport/google_transit.zip</p>
-<p>and realtime feed: http://transitdata.nashvillemta.org/TMGTFSRealTimeWebService/vehicle/vehiclepositions.pb</p>
-<p>tried to google how to query the realtime feed but couldn’t find any clear documentation or example project. turned to chat gpt, and it gave me some sample python code</p>
-<p>need to get google maps API code, directions API</p>
+<p>I was basking in the glory of finishing my <a href="../../posts/webscraping-showtimes/index.html">box office sign</a> one day when my sister sent me <a href="https://www.bbc.com/news/av/uk-england-bristol-68617352">this video</a> of an English man making a business out of his passion for railway departure departure boards. I immediately thought, “this is so cool,” then thought maybe I can do something similar with our mediocre bus network<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> here in Nashville using what I learned from the box office sign project. I don’t have a car and rely on this middling bus network to get around, so it would be quite useful to have my own sign that showed when buses would be arriving near my house so that I could better plan my travels.</p>
+<p>This type of sign would be very different than what I built for movie showtimes because the data source was completely unknown to me, and also it would need to refresh every minute or so, as opposed to every day. The <a href="https://shop.pimoroni.com/products/inky-frame-7-3?variant=40541882056787">Inky Frame e-ink screen</a> that I used for the box office sign project is probably not the right hardware to display such a sign because it takes about 20 seconds for the screen to refresh itself, so by the time the new departure times are shown they would already be out-of-date. However I decided to soldier on with wrangling the data and building something for the e-ink sign, and will figure out better hardware to use at a later time.</p>
+<section id="transit-data" class="level1">
+<h1>Transit data</h1>
+<p>On the quest to find a data source for this bus departure board, my first thought was obviously that I want to use whatever Google Maps uses to show local public transportation information. A bit of googling revealed that Google collects data from transit systems in a special kind of format called <a href="https://gtfs.org">“General Transit Feed Specification (GTFS)”</a>. Really there are <a href="https://developers.google.com/transit">two kinds of feeds</a>: GTFS Static and GTFS Realtime. As the name implies, GTFS Static feed contains data that doesn’t change about a transportation network, such as the stop locations, trip details or schedule. The GTFS Realtime feed on the other hand contains realtime information about the network, like the vehicle positions and service alerts.</p>
+<p>After digging on the GTFS website I found a repository of network GTFS feeds at <a href="https://www.transit.land/operators/">Transitland</a>. I searched for Nashville at this site and found their <a href="https://www.transit.land/feeds/f-dn6-regionaltransportationauthorityofmiddletennessee~nashville">static feed</a> and <a href="https://www.transit.land/feeds/f-nashvillemta~rt">realtime feed</a>.</p>
+<p>Next I tried to google how to query the realtime feed but couldn’t find any clear documentation or example project to inspire me. So I did what we’re all doing these days and turned to ChatGPT, which gave me some great python code to get started with.</p>
+</section>
+<section id="code" class="level1">
+<h1>Code</h1>
+<p>There are a few steps needed to create my departure board sign:</p>
 <ol type="1">
-<li>download static trip information</li>
-<li>pull buses near me</li>
-<li>filter to which ones have not yet passed my place on their route</li>
-<li>calculate time to my place</li>
-<li>structure data for display</li>
-<li>set up automation</li>
+<li>Download static trip information from GTFS Static feed</li>
+<li>Find buses near me on the routes I care about from the GTFS Realtime feed</li>
+<li>Filter the buses on routes I care about to just ones that have not yet passed my closest bus stop on their route</li>
+<li>Calculate each bus’s estimated arrival time to my nearest bus stops</li>
+<li>Structure data for display</li>
 </ol>
+<p>To make this board truly live, these steps would next be needed:</p>
+<ol start="6" type="1">
+<li>Get display loaded onto board</li>
+<li>Set up automation so that board refreshes every minute</li>
+</ol>
+<p>…but as I’ve said, the Inky Frame isn’t the ideal hardware so I’m going to worry about these pieces later.</p>
+<p>The code for this project is on <a href="https://github.com/lindsayevanslee/inky-frame/tree/main/nashvillemta">Github</a> currently in the same repository as my box office sign. The <code>run_all.py</code> script runs all the necessary steps from top to bottom. Each step has its own script:</p>
+<ol type="1">
+<li><code>collect_static_details.py</code></li>
+<li><code>collect_vehicles_on_route.py</code></li>
+<li><code>find_vehicles_not_yet_passed.py</code></li>
+<li><code>calculate_eta.py</code></li>
+<li><code>create_board_image.py</code></li>
+</ol>
+<p>Some important parameters are stored in a file <code>my_secrets.py</code>, including the latitude and longitude of my apartment, the bus routes I want to look for, and the API key for the <a href="https://github.com/googlemaps/google-maps-services-python">Google Maps Directions API</a>. I’ll leave the instructions for setting up this API connection to elsewhere.</p>
+<p>I’ll briefly describe each step.</p>
+<section id="collect_static_details.py" class="level2">
+<h2 class="anchored" data-anchor-id="collect_static_details.py"><code>collect_static_details.py</code></h2>
+<p>This script downloads the necessary GTFS Static data locally, merges the trips and routes data together, and identifies the bus stops on the specified routes that are nearest to my apartment. The nearest stops are found using the <code>KDTree</code> function from the <code>scipy.spatial</code> package. This algorithm is run for each route and for each direction on each route. The details about the closest stops are then saved locally as a csv file.</p>
+</section>
+<section id="collect_vehicles_on_route.py" class="level2">
+<h2 class="anchored" data-anchor-id="collect_vehicles_on_route.py"><code>collect_vehicles_on_route.py</code></h2>
+<p>This script uses the GTFS Realtime feed to find vehicles on the specified routes that are currently out in the field. The GTFS Realtime feed is queried using a combination of the <code>google.transit</code> and <code>requests</code> packages. The GTFS Realtime feed returns a lot of information in a json format, but mostly what is needed are elements within the <code>vehicle</code> field. These elements are queried and then restructured into a dataframe and outputted to a csv file.</p>
+</section>
+<section id="find_vehicles_not_yet_passed.py" class="level2">
+<h2 class="anchored" data-anchor-id="find_vehicles_not_yet_passed.py"><code>find_vehicles_not_yet_passed.py</code></h2>
+<p>Now that we have all the active vehicles, we have to filter the list down to those that we are about, namely those that haven’t yet passed by my house on their route. This script simply compares the latitude and lonitude of the bus positions with the latitude and longitude of the bus stops. This works well enough in my case because the routes near my house are quite linear. This would be an issue if there were lots of turns or odd curves in the routes.</p>
+</section>
+<section id="calculate_eta.py" class="level2">
+<h2 class="anchored" data-anchor-id="calculate_eta.py"><code>calculate_eta.py</code></h2>
+<p>This is the juiciest bit: among the buses not yet passed by my house, calculate their estimated time of arrival to the stops nearest my house. The script that I ended up with is quite simple, but it oversimplifies some complexities in the data, which definitely leads to more inaccurate calculated ETAs.</p>
+<p>The core of this script uses the <code>googlemaps</code> python package to query the Directions API to calculate the estimated travel time between the current position of each bus and the bus stop nearest my house. The Directions API returns directions as if you typed the query into Google Maps yourself. If you look for public transit directions, often the directions will first tell you to walk to the transit stop, then get onto the bus, meaning your “trip” will have two “legs”. If you are already at the bus stop, then Google Maps will tell you to just get on the bus, meaning your “trip” will only have one “leg”.</p>
+<p>Using this Directions API to calculate ETAs for buses already on route is trickier. Google Maps is expecting the query to come from a person not already on bus, but what I am trying to get is travel time as if the person is already on the bus and does not need to walk to a stop. If the bus is currently positioned near a bus stop, then the Directions API will return a “one-leg trip”, and the ETA spit out by the API can be directly taken as the ETA for that bus. If the bus is not currently next to a bus stop, then the API is going to return a “two-leg trip”, with the first leg being “walking” directions to the nearest stop. Somehow I need to convert this “walking time” into “bus travel time” to either add or subtract from the time given by the “transit” step of the trip. You would add or subtract it depending on whether Google Maps is telling you to walk in the direction of travel or against it (your nearest bus stop may be behind you!)</p>
+<p>The image below shows an example of this. Pretend that the gold star is the current position of a bus, and I am trying to calculate its ETA to the stop nearest my house (off-screen). Google Maps will assume that the gold star is a person who first needs to walk to a bus stop, instead of a bus currently in motion. So for my purposes the distance covered by the “walking step” (blue dotted line) needs to be converted to “transit time” and added to the time given by the “transit step” (red solid line).</p>
+<p><img src="walking_step.png" class="img-fluid" alt="Screenshot from Google Maps showing how transit directions will first give walking directions (blue dotted line) before starting the transit directions (red solid line)"></p>
+<p>In order to accurately capture this ETA time, I know I would need to do the following:</p>
+<ol type="1">
+<li>find the stop before and the stop after the current position of the bus (i.e., the start of the “walking” step represented by the gold star above)</li>
+<li>determine whether walking step is in the direction of travel or not (in the above example, it is in the direction of travel)</li>
+<li>if walking step is in the direction of travel: convert distance to time and add to total ETA time</li>
+<li>if walking step is not in the direction of travel: convert distance to time and subtract from total ETA time</li>
+</ol>
+<p>…but I got tripped up on step 1 and couldn’t find a good solution. I can’t use a simple comparison of latitude and longitude here because the routes of the bus are more complicated towards the terminuses (termini?) so the comparison would not be accurate. I can’t try to find the two closest stops to the current position of the bus, because it’s not guaranteed the two closest stops would be in front of and behind the bus. The API itself doesn’t seem to return any data that I can leverage to find the stops before and after the current position.</p>
+<p>So instead of getting stuck on this point forever, I decided to move on and just take the ETA from the transit step as the total ETA (unless the stop was less than one stop away, in which case I just assumed it was a minute away). Maybe I’ll have an epiphany one day that will help me solve this issue.</p>
+</section>
+<section id="create_board_image.py" class="level2">
+<h2 class="anchored" data-anchor-id="create_board_image.py"><code>create_board_image.py</code></h2>
+<p>Now in the home stretch: the output of the calculate ETA step is read in and manipulated to create a png image displaying all of the active buses and their ETAs. Not very much exciting to say here, except that it was slightly more complicated than the box office sign because I drew shapes around the bus numbers in order to format them like you see on Google Maps.</p>
+</section>
+</section>
+<section id="result" class="level1">
+<h1>Result</h1>
+<p>All of that work results in a simple sign that looks like this:</p>
+<p><img src="departure_board.png" class="img-fluid" alt="White sign reading 'Bus Departures Near Me' with the current time and a list of 4 buses with their route number in a red square, route direction, and estimated time of arrival"></p>
+<p>Not super attractive but gets the job done. Hopefully one day soon I’ll figure out how to put this into action on an actual working sign. I may need to invest into a soldering iron.</p>
 
 
+</section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Shout out to our mayor Freddie O’Connell though who is pounding the pavement to get a <a href="https://www.nashville.gov/featured-initiatives/transit">transit referendum</a> passed that will breathe some much needed life into public transportation here.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
