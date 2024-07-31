@@ -161,23 +161,41 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Following instructions here: https://github.com/quarto-ext/shinylive</p>
+<p>https://pypi.org/project/python-docx/</p>
+<p>https://shiny.posit.co/py/docs/shinylive.html#requiring-extra-packages-with-requirements.txt</p>
+<p>https://shinylive.io/py/examples/#extra-packages</p>
+<p>to get this to work in quarto need to create requirements.txt in the chunk: https://github.com/quarto-ext/shinylive/issues/5</p>
 <p>This is a Shinylive application embedded in a Quarto doc.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| standalone: true
+#| viewerHeight: 420
 
 from shiny import *
+import docx
 
 app_ui = ui.page_fluid(
     ui.input_slider("n", "N", 0, 100, 40),
     ui.output_text_verbatim("txt"),
+    ui.download_button("downloadData", "Download")
 )
 
 def server(input, output, session):
-    @output
     @render.text
     def txt():
         return f"The value of n*2 is {input.n() * 2}"
 
+    @session.download(filename="file.docx")
+    def downloadData():
+        doc = docx.Document()
+        doc.add_paragraph("Here is a paragraph please.")
+        target_stream = StringIO()
+        doc.save(target_stream)
+
+
 app = App(app_ui, server)
+
+## file: requirements.txt
+python-docx
+lxml
 </code></pre>
 
 
