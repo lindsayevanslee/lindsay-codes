@@ -32,26 +32,29 @@ This is a Shinylive application embedded in a Quarto doc.
 #| standalone: true
 #| viewerHeight: 420
 
-from shiny import *
+import io
 import docx
+from shiny import App, render, ui
 
 app_ui = ui.page_fluid(
     ui.input_slider("n", "N", 0, 100, 40),
-    ui.output_text_verbatim("txt"),
-    ui.download_button("downloadData", "Download")
+    ui.download_button("download2", "Download")
 )
 
 def server(input, output, session):
-    @render.text
-    def txt():
-        return f"The value of n*2 is {input.n() * 2}"
 
-    @session.download(filename="file.docx")
-    def downloadData():
+    @render.download(filename="file.docx")
+    def download2():
+        #create document object
         doc = docx.Document()
+
+        #add content to doc
         doc.add_paragraph("Here is a paragraph please.")
-        target_stream = StringIO()
-        doc.save(target_stream)
+
+        #save document
+        with io.BytesIO() as buf:
+            doc.save(buf)
+            yield buf.getvalue()
 
 
 app = App(app_ui, server)
