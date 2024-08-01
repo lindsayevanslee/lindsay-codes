@@ -165,6 +165,7 @@ ul.task-list li input[type="checkbox"] {
 <p>https://shiny.posit.co/py/docs/shinylive.html#requiring-extra-packages-with-requirements.txt</p>
 <p>https://shinylive.io/py/examples/#extra-packages</p>
 <p>to get this to work in quarto need to create requirements.txt in the chunk: https://github.com/quarto-ext/shinylive/issues/5</p>
+<p>Followed pattern in https://shinylive.io/py/examples/#file-download for how to create a document dynamically and get it to download, also refering to python-docx docs for info on how to use that package to create a document https://python-docx.readthedocs.io/en/latest/. testing in the examples play area was helpful (removing variables like, this rendering in quarto, the fact that I’m trying it locally and in github pages, etc)</p>
 <p>This is a Shinylive application embedded in a Quarto doc.</p>
 <pre class="shinylive-python" data-engine="python"><code>#| standalone: true
 #| viewerHeight: 420
@@ -174,7 +175,7 @@ import docx
 from shiny import App, render, ui
 
 app_ui = ui.page_fluid(
-    ui.input_slider("n", "N", 0, 100, 40),
+    ui.input_slider("n", "How did the student do on the test?", 0, 100, 40),
     ui.download_button("download2", "Download")
 )
 
@@ -185,10 +186,50 @@ def server(input, output, session):
         #create document object
         doc = docx.Document()
 
-        #add content to doc
-        doc.add_paragraph("Here is a paragraph please.")
+        #add content to doc -------
 
-        #save document
+        #add a title
+        doc.add_heading('This is a report', 0)
+
+        #add a paragraph
+        p = doc.add_paragraph('A plain paragraph having some ')
+        p.add_run('bold').bold = True
+        p.add_run(' and some ')
+        p.add_run('italic.').italic = True
+
+        #add a heading
+        doc.add_heading('Results', level=1)
+
+        #add some lists
+        doc.add_paragraph(
+            'first item in unordered list', style='List Bullet'
+        )
+        doc.add_paragraph(
+            'first item in ordered list', style='List Number'
+        )
+        
+        #add a table, pulling from value inputted by user
+        records = (
+            (input.n(), 'Score 1', 'They did alright'),
+        )
+        
+        table = doc.add_table(rows=1, cols=3)
+        hdr_cells = table.rows[0].cells
+        hdr_cells[0].text = 'Score value'
+        hdr_cells[1].text = 'Score name'
+        hdr_cells[2].text = 'Interpretation'
+        
+        for qty, id, desc in records:
+            row_cells = table.add_row().cells
+            row_cells[0].text = str(qty)
+            row_cells[1].text = id
+            row_cells[2].text = desc
+
+        #add a page break
+        doc.add_page_break()
+
+
+        #save document ------------------
         with io.BytesIO() as buf:
             doc.save(buf)
             yield buf.getvalue()
@@ -200,6 +241,9 @@ app = App(app_ui, server)
 python-docx
 lxml
 </code></pre>
+<p>drawbacks: looks like for now shinylive in quarto needs to be one big code chunk</p>
+<p>for data security reasons we may want to make something they can use and render locally, maybe electricShine can help? https://chasemc.github.io/electricShine/ or make some desktop app? https://www.r-bloggers.com/2014/04/deploying-desktop-apps-with-r/</p>
+<p>intersting tidbit learned: force a tuple of tuples by putting a comma at the end of tuple</p>
 
 
 
