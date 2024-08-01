@@ -71,23 +71,35 @@ def server(input, output, session):
         doc.add_paragraph(
             'first item in ordered list', style='List Number'
         )
+
+        #define a function that outputs a string based on the value of input.n()
+        def get_interpretation(score):
+            if score < 50:
+                return "They did poorly"
+            elif score < 70:
+                return "They did okay"
+            elif score < 90:
+                return "They did well"
+            else:
+                return "They did excellent"
         
         #add a table, pulling from value inputted by user
         records = (
-            (input.n(), 'Score 1', 'They did alright'),
+            ('Score 1', input.n() , get_interpretation(input.n())),
         )
+
         
         table = doc.add_table(rows=1, cols=3)
         hdr_cells = table.rows[0].cells
-        hdr_cells[0].text = 'Score value'
-        hdr_cells[1].text = 'Score name'
+        hdr_cells[0].text = 'Score name'
+        hdr_cells[1].text = 'Score value'
         hdr_cells[2].text = 'Interpretation'
         
-        for qty, id, desc in records:
+        for score_name, score_value, score_desc in records:
             row_cells = table.add_row().cells
-            row_cells[0].text = str(qty)
-            row_cells[1].text = id
-            row_cells[2].text = desc
+            row_cells[0].text = score_name
+            row_cells[1].text = str(score_value)
+            row_cells[2].text = score_desc
 
         #add a page break
         doc.add_page_break()
@@ -100,6 +112,7 @@ def server(input, output, session):
 
 
 app = App(app_ui, server)
+
 
 ## file: requirements.txt
 python-docx
