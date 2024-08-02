@@ -13,19 +13,17 @@ filters:
   - shinylive
 ---
 
-I had a meeting at work recently where someone described a long, tedious process her team had to go through to write up a specifically-formatted report on a regular basis. She asked for help finding ways to reduce the time it takes to write these documents, namely by automating the sections that are fairly rote. 
+I had a meeting at work recently where someone described a long, tedious process her team had to go through to write up a specifically-formatted report on a regular basis. She asked for help finding ways to reduce the time it takes to write these documents, namely by automating the sections that are fairly rote.
 
 One option I thought of immediately was to build a [Shiny](https://www.rstudio.com/products/shiny/) app. I was thinking the user could input some key data points into the app, and then the app would analyze that data and produce a Word doc in a particular format based on the results.
 
-I've dabbled in Shiny before, but one struggle was figuring out how to host it. You could use a service like [shinyapps.io](https://www.shinyapps.io), but using the free version isn't very enterprise-friendly, and the non-free version is, well, not free. Then as if the gods were smiling down upon me, I came across a post in LinkedIn about [shinylive](https://shiny.posit.co/py/docs/shinylive.html), which is a flavor of shiny that runs completely in your web browser. In theory it would be possible to "host" a shinylive application on a Quarto website hosted on GitHub Pages completely for free. What better way to test this idea than on this very Quarto website hosted on GitHub Pages? 
+I've dabbled in Shiny before, but one struggle was figuring out how to host it. You could use a service like [shinyapps.io](https://www.shinyapps.io), but using the free version isn't very enterprise-friendly, and the non-free version is, well, not free. Then as if the gods were smiling down upon me, I came across a post in LinkedIn about [shinylive](https://shiny.posit.co/py/docs/shinylive.html), which is a flavor of shiny that runs completely in your web browser. In theory it would be possible to "host" a shinylive application on a Quarto website hosted on GitHub Pages completely for free. What better way to test this idea than on this very Quarto website hosted on GitHub Pages?
 
 I started off by following the instructions for the [Quarto extension for shinylive](https://github.com/quarto-ext/shinylive). I installed the shinylive python package with:
-
 
 ```{bash}
 pip install shinylive --upgrade
 ```
-
 
 ...and added the extension to my quarto project ([the repo for this website](https://github.com/lindsayevanslee/lindsay-codes)) with:
 
@@ -52,10 +50,9 @@ lxml
 
 Reading back at the [quarto extension documentation](https://github.com/quarto-ext/shinylive), I see they also explain how to do this there. If only I had originally thought to scroll down.
 
-To create my actual prototype shinylive app, I followed the patterns in the [examples](https://shinylive.io/py/examples/#file-download) for dynamically creating a file and allowing the user to download it. I also referred to the [python-docx](https://python-docx.readthedocs.io/en/latest/) example code for how to create a Word doc with this package. Testing my app in the shinylive examples play area was helpful for debugging, which allowed me to removing variables like the fact that I'm rendering specifically in a Quarto site, that I'm publishing to GitHib Pages, etc.
+To create my actual prototype shinylive app, I followed the patterns in the [examples](https://shinylive.io/py/examples/#file-download) for dynamically creating a file and allowing the user to download it. I also referred to the [python-docx](https://python-docx.readthedocs.io/en/latest/) example code for how to create a Word doc with this package. Testing my app in the shinylive examples play area was helpful for debugging, which allowed me to remove variables like the fact that I'm rendering specifically in a Quarto site, that I'm publishing to GitHib Pages, etc.
 
 Without further ado, here is my gorgeous and perfect app! You can see the code in the [repo for this site](https://github.com/lindsayevanslee/lindsay-codes/blob/main/posts/shinylive/index.qmd).
-
 
 ```{shinylive-python}
 #| standalone: true
@@ -146,8 +143,7 @@ lxml
 
 ```
 
-
-One significant drawback with this so far is like I've already mentioned, your app has to be in one big code chunk, at least if you are embedding your shinylive app in Quarto. This limits how complex your app can be, which may be an issue in my particular use case. Another issue for me is that for data security reasons, my end users may want something that they can install and render on their own local computer without use of the internet. I've tried some light googling to see if it's easy to create a desktop app from shiny and it [doesn't look so easy](https://www.r-bloggers.com/2014/04/deploying-desktop-apps-with-r/). 
+One significant drawback with this so far is like I've already mentioned, your app has to be in one big code chunk, at least if you are embedding your shinylive app in Quarto. This limits how complex your app can be, which may be an issue in my particular use case. Another issue for me is that for data security reasons, my end users may want something that they can install and render on their own local computer without use of the internet. I've tried some light googling to see if it's easy to create a desktop app from shiny and it [doesn't look so easy](https://www.r-bloggers.com/2014/04/deploying-desktop-apps-with-r/).
 
 So we'll see if this actually ends up being useful for the user I had in mind, but even if it isn't, it was cool to learn anyway. Another fun python fact I learned: to force a tuple of tuples to remain a tuple of tuples even if it's only got one tuple in it, slap a comma at the end of your tuple like so:
 
