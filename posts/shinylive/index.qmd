@@ -1,11 +1,10 @@
 ---
-title: "Going live with shinylive"
-description: ""
-date: "2024-07-30"
-draft: true
+title: "Going live with Shinylive"
+description: "Am I web developer?"
+date: "2024-08-01"
 image: shinylive-shinylive-deployment-model.png
 image-alt: "A diagram depicting how shinylive works from the documentation. The documenation says: When an application is deployed with Shinylive, Python and Shiny run in the web browser: the browser is effectively both the client and server for the application. There is a web server that serves files, but it does not run Python or Shiny—it can be a “dumb” static web server. Source: https://shiny.posit.co/py/docs/shinylive.html#deploying-shinylive-applications"
-categories: [shiny, web app]
+categories: [shiny, web app, python]
 jupyter: python3
 engine: knitr
 execute:
@@ -14,25 +13,52 @@ filters:
   - shinylive
 ---
 
-Following instructions here: https://github.com/quarto-ext/shinylive
+I had a meeting at work recently where someone described a long, tedious process her team had to go through to write up a specifically-formatted report on a regular basis. She asked for help finding ways to reduce the time it takes to write these documents, namely by automating the sections that are fairly rote. 
 
-https://pypi.org/project/python-docx/
+One option I thought of immediately was to build a [Shiny](https://www.rstudio.com/products/shiny/) app. I was thinking the user could input some key data points into the app, and then the app would analyze that data and produce a Word doc in a particular format based on the results.
 
-https://shiny.posit.co/py/docs/shinylive.html#requiring-extra-packages-with-requirements.txt
+I've dabbled in Shiny before, but one struggle was figuring out how to host it. You could use a service like [shinyapps.io](https://www.shinyapps.io), but using the free version isn't very enterprise-friendly, and the non-free version is, well, not free. Then as if the gods were smiling down upon me, I came across a post in LinkedIn about [shinylive](https://shiny.posit.co/py/docs/shinylive.html), which is a flavor of shiny that runs completely in your web browser. In theory it would be possible to "host" a shinylive application on a Quarto website hosted on GitHub Pages completely for free. What better way to test this idea than on this very Quarto website hosted on GitHub Pages? 
 
-https://shinylive.io/py/examples/#extra-packages
-
-to get this to work in quarto need to create requirements.txt in the chunk: https://github.com/quarto-ext/shinylive/issues/5
-
-Followed pattern in https://shinylive.io/py/examples/#file-download for how to create a document dynamically and get it to download, also refering to python-docx docs for info on how to use that package to create a document https://python-docx.readthedocs.io/en/latest/. testing in the examples play area was helpful (removing variables like, this rendering in quarto, the fact that I'm trying it locally and in github pages, etc)
+I started off by following the instructions for the [Quarto extension for shinylive](https://github.com/quarto-ext/shinylive). I installed the shinylive python package with:
 
 
-This is a Shinylive application embedded in a Quarto doc.
+```{bash}
+pip install shinylive --upgrade
+```
+
+
+...and added the extension to my quarto project ([the repo for this website](https://github.com/lindsayevanslee/lindsay-codes)) with:
+
+```{bash}
+quarto add quarto-ext/shinylive
+```
+
+In the YAML header for [this post](https://github.com/lindsayevanslee/lindsay-codes/blob/main/posts/shinylive/index.qmd) I added:
+
+```{bash}
+filters:
+  - shinylive
+```
+
+Then the code for your shinylive application should all live in one code chunk marked with `{shinylive-python}` and containing `#| standalone: true`. This "standalone" bit apparently tells the code this chunk is a complete Shiny application instead of one spread across multiple files or chunks in the document, which they luckily say will be supported in the future.
+
+I wanted my shinylive application to have a download button that allows the user to download a `docx` file. I found the python package [`python-docx`](https://pypi.org/project/python-docx/) which can accomplish this. Next I had to figure out how to get shinylive to install and use this package. The [documentation](https://shiny.posit.co/py/docs/shinylive.html#requiring-extra-packages-with-requirements.txt) and [examples](https://shinylive.io/py/examples/#extra-packages) say you can create a `requirements.txt` file. But when I tried to create a `requirements.txt` file in the same folder as my quarto file, the application wouldn't work because `python-docx` wasn't being installed, indicating the requirements were not being recognized. After a lot of digging I came across [this GitHub issue](https://github.com/quarto-ext/shinylive/issues/5) that showed how you can get your quarto-based shinylive application to recognize other files by creating them dynamically in the same code chunk using a format like:
+
+```{bash}
+## file: requirements.txt
+python-docx
+lxml
+```
+
+Reading back at the [quarto extension documentation](https://github.com/quarto-ext/shinylive), I see they also explain how to do this there. If only I had originally thought to scroll down.
+
+To create my actual prototype shinylive app, I followed the patterns in the [examples](https://shinylive.io/py/examples/#file-download) for dynamically creating a file and allowing the user to download it. I also referred to the [python-docx](https://python-docx.readthedocs.io/en/latest/) example code for how to create a Word doc with this package. Testing my app in the shinylive examples play area was helpful for debugging, which allowed me to removing variables like the fact that I'm rendering specifically in a Quarto site, that I'm publishing to GitHib Pages, etc.
+
+Without further ado, here is my gorgeous and perfect app! You can see the code in the [repo for this site](https://github.com/lindsayevanslee/lindsay-codes/blob/main/posts/shinylive/index.qmd).
 
 
 ```{shinylive-python}
 #| standalone: true
-#| viewerHeight: 420
 
 import io
 import docx
@@ -121,8 +147,14 @@ lxml
 ```
 
 
-drawbacks: looks like for now shinylive in quarto needs to be one big code chunk
+One significant drawback with this so far is like I've already mentioned, your app has to be in one big code chunk, at least if you are embedding your shinylive app in Quarto. This limits how complex your app can be, which may be an issue in my particular use case. Another issue for me is that for data security reasons, my end users may want something that they can install and render on their own local computer without use of the internet. I've tried some light googling to see if it's easy to create a desktop app from shiny and it [doesn't look so easy](https://www.r-bloggers.com/2014/04/deploying-desktop-apps-with-r/). 
 
-for data security reasons we may want to make something they can use and render locally, maybe electricShine can help? https://chasemc.github.io/electricShine/ or make some desktop app? https://www.r-bloggers.com/2014/04/deploying-desktop-apps-with-r/
+So we'll see if this actually ends up being useful for the user I had in mind, but even if it isn't, it was cool to learn anyway. Another fun python fact I learned: to force a tuple of tuples to remain a tuple of tuples even if it's only got one tuple in it, slap a comma at the end of your tuple like so:
 
-intersting tidbit learned: force a tuple of tuples by putting a comma at the end of tuple
+```{python}
+records = (
+    ('Score 1', input.n() , get_interpretation(input.n())), #this last comma is key
+)
+```
+
+Lessons abound!

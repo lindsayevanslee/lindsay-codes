@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/shinylive/index.html",
       "/posts/realtime-bus-departure-board/index.html",
       "/posts/github-codespaces/index.html",
       "/posts/get-started-with-conda/index.html",

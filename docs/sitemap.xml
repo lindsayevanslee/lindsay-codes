@@ -2,50 +2,54 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lindsay.codes/about.html</loc>
-    <lastmod>2024-08-01T02:09:34.152Z</lastmod>
+    <lastmod>2024-08-02T01:53:44.553Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/apple-watch/index.html</loc>
-    <lastmod>2024-08-01T02:09:31.947Z</lastmod>
+    <lastmod>2024-08-02T01:53:41.654Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/webscraping-screenshots/index.html</loc>
-    <lastmod>2024-08-01T02:09:29.408Z</lastmod>
+    <lastmod>2024-08-02T01:53:37.524Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/font-design/index.html</loc>
-    <lastmod>2024-08-01T02:09:26.676Z</lastmod>
+    <lastmod>2024-08-02T01:53:34.781Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/github-codespaces/index.html</loc>
-    <lastmod>2024-08-01T02:09:25.297Z</lastmod>
+    <lastmod>2024-08-02T01:53:32.651Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/webscraping-showtimes/index.html</loc>
-    <lastmod>2024-08-01T02:09:23.714Z</lastmod>
+    <lastmod>2024-08-02T01:53:30.692Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/rstudio-code-snippets/index.html</loc>
-    <lastmod>2024-08-01T02:09:21.851Z</lastmod>
+    <lastmod>2024-08-02T01:53:28.677Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/webscraping-showtimes-update/index.html</loc>
-    <lastmod>2024-08-01T02:09:20.877Z</lastmod>
+    <lastmod>2024-08-02T01:53:27.846Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/power-bi-custom-map/index.html</loc>
-    <lastmod>2024-08-01T02:09:24.609Z</lastmod>
+    <lastmod>2024-08-02T01:53:31.783Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/realtime-bus-departure-board/index.html</loc>
-    <lastmod>2024-08-01T02:09:26.140Z</lastmod>
+    <lastmod>2024-08-02T01:53:34.243Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/get-started-with-conda/index.html</loc>
-    <lastmod>2024-08-01T02:09:27.286Z</lastmod>
+    <lastmod>2024-08-02T01:53:35.376Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/shinylive/index.html</loc>
+    <lastmod>2024-08-02T01:53:41.005Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/index.html</loc>
-    <lastmod>2024-08-01T02:09:33.777Z</lastmod>
+    <lastmod>2024-08-02T01:53:43.982Z</lastmod>
   </url>
 </urlset>
