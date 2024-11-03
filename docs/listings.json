@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/connect-to-gpu/index.html",
       "/posts/library-of-congress-download/index.html",
       "/posts/shinylive/index.html",
       "/posts/realtime-bus-departure-board/index.html",

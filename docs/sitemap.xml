@@ -2,58 +2,62 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lindsay.codes/about.html</loc>
-    <lastmod>2024-10-19T19:57:11.138Z</lastmod>
+    <lastmod>2024-11-03T22:38:20.419Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/apple-watch/index.html</loc>
-    <lastmod>2024-10-19T19:57:07.981Z</lastmod>
+    <lastmod>2024-11-03T22:38:18.197Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/library-of-congress-download/index.html</loc>
-    <lastmod>2024-10-19T19:57:04.938Z</lastmod>
+    <lastmod>2024-11-03T22:38:15.718Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/get-started-with-conda/index.html</loc>
-    <lastmod>2024-10-19T19:57:02.823Z</lastmod>
+    <lastmod>2024-11-03T22:38:14.322Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/realtime-bus-departure-board/index.html</loc>
-    <lastmod>2024-10-19T19:57:01.006Z</lastmod>
+    <lastmod>2024-11-03T22:38:13.248Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/power-bi-custom-map/index.html</loc>
-    <lastmod>2024-10-19T19:56:58.755Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lindsay.codes/posts/webscraping-showtimes-update/index.html</loc>
-    <lastmod>2024-10-19T19:56:55.001Z</lastmod>
+    <lastmod>2024-11-03T22:38:11.884Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/rstudio-code-snippets/index.html</loc>
-    <lastmod>2024-10-19T19:56:55.845Z</lastmod>
+    <lastmod>2024-11-03T22:38:08.687Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/webscraping-showtimes-update/index.html</loc>
+    <lastmod>2024-11-03T22:38:08.215Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lindsay.codes/posts/connect-to-gpu/index.html</loc>
+    <lastmod>2024-11-03T22:38:09.652Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/webscraping-showtimes/index.html</loc>
-    <lastmod>2024-10-19T19:56:58.017Z</lastmod>
+    <lastmod>2024-11-03T22:38:11.152Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/github-codespaces/index.html</loc>
-    <lastmod>2024-10-19T19:56:59.588Z</lastmod>
+    <lastmod>2024-11-03T22:38:12.419Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/font-design/index.html</loc>
-    <lastmod>2024-10-19T19:57:01.874Z</lastmod>
+    <lastmod>2024-11-03T22:38:13.783Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/webscraping-screenshots/index.html</loc>
-    <lastmod>2024-10-19T19:57:04.071Z</lastmod>
+    <lastmod>2024-11-03T22:38:15.161Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/posts/shinylive/index.html</loc>
-    <lastmod>2024-10-19T19:57:07.075Z</lastmod>
+    <lastmod>2024-11-03T22:38:17.733Z</lastmod>
   </url>
   <url>
     <loc>https://lindsay.codes/index.html</loc>
-    <lastmod>2024-10-19T19:57:10.636Z</lastmod>
+    <lastmod>2024-11-03T22:38:20.062Z</lastmod>
   </url>
 </urlset>
