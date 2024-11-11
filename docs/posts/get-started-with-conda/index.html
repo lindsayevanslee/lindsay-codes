@@ -188,7 +188,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#update-2024-11-10---updating-a-conda-environment" id="toc-update-2024-11-10---updating-a-conda-environment" class="nav-link active" data-scroll-target="#update-2024-11-10---updating-a-conda-environment">Update 2024-11-10 - updating a conda environment</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
@@ -234,15 +240,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> config <span class="at">--add</span> channels conda-forge</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>After doing this, I tried to create the environment again, and I got a new but more promising error. This time it said there were only two packages it wasn’t able to install (<code>pure-eval==0.2.2</code> and <code>stack-data==0.6.2</code>). It suggested searching <a href="https://anaconda.org">https://anaconda.org</a> to see if I could find a channel they were in that I could add. I tried searching but couldn’t find any channels they were in.</p>
+<p>After doing this, I tried to create the environment again, and I got a new but more promising error. This time it said there were only two packages it wasn’t able to install (<code>pure-eval==0.2.2</code> and <code>stack-data==0.6.2</code>). It suggested searching <a href="https://anaconda.org" class="uri">https://anaconda.org</a> to see if I could find a channel they were in that I could add. I tried searching but couldn’t find any channels they were in.</p>
 <p>Luckily from the <a href="https://docs.conda.io/projects/conda/en/4.6.1/user-guide/tasks/manage-environments.html#create-env-file-manually"><code>conda</code> documentation</a> I saw that you can still install packages with <code>pip</code> while using <code>conda</code>. I wasn’t sure how to tell <code>conda</code> to use <code>pip</code> using a <code>requirements.txt</code> file, but it seemed like it was easier using a <code>environment.yml</code> file instead. I asked GitHub Copilot to help me convert my <code>requirements.txt</code> to a <code>environment.yml</code> file, then tried to create the environment again with:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>I still got an error, but luckily it was a small one: I needed to use single <code>=</code> for specifying versions for the <code>dependencies</code> in <code>environment.yml</code>, while I needed to use <code>==</code> for specifying versions for packages installed with <code>pip</code>. Fixing this, I reran the command, and finally I created a working <code>conda</code> environment! I also retried the point-and-click way to create an environment in VS Code, it also worked, automatically using the <code>environment.yml</code> file to install the necessary packages.</p>
 <p>For the moment I’m keeping both <code>requirements.txt</code> and <code>environment.yml</code> in my repo because <code>requirements.txt</code> is used in the GitHub Actions I have set up. I also noticed that my GitHub Actions use different python version than what I’m using locally in this new <code>conda</code> environment. But I’ll take a few moments to bask in my win and will worry about that later.</p>
+<section id="update-2024-11-10---updating-a-conda-environment" class="level1">
+<h1>Update 2024-11-10 - updating a conda environment</h1>
+<p>I’ve discovered that unless you create an immaculate <code>environment.yml</code> on the first try, you’ll probably have to update your <code>conda</code> environment. You can do that like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate myenv <span class="co">#activate the environment you want to update</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env update <span class="at">--file</span> environment.yml <span class="at">--prune</span> <span class="co">#update myenv</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
