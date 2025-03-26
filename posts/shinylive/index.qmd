@@ -154,3 +154,65 @@ records = (
 ```
 
 Lessons abound!
+
+# Update 2025-02-09 issue after getting new computer
+
+After I got my new Mac, I had issues rendering this quarto page with the shinylive application. Despite running `pip install shinylive`, when I would try to run `quarto render` I kept getting an error: 
+
+```{bash}
+Error running 'shinylive' command. Perhaps you need to install / update the 'shinylive' Python package?
+```
+
+I decided to install a newer version of python with:
+
+```{bash}
+brew install python@3.13
+```
+
+I restarted RStudio. Then I updated the Global Options in RStudio to select this new version as my interpreter. Next I tried running `pip install shinylive` again, and got this message:
+
+```{bash}
+error: externally-managed-environment
+
+× This environment is externally managed
+╰─> To install Python packages system-wide, try brew install
+    xyz, where xyz is the package you are trying to
+    install.
+    
+    If you wish to install a Python library that isn't in Homebrew,
+    use a virtual environment:
+    
+    python3 -m venv path/to/venv
+    source path/to/venv/bin/activate
+    python3 -m pip install xyz
+    
+    If you wish to install a Python application that isn't in Homebrew,
+    it may be easiest to use 'pipx install xyz', which will manage a
+    virtual environment for you. You can install pipx with
+    
+    brew install pipx
+    
+    You may restore the old behavior of pip by passing
+    the '--break-system-packages' flag to pip, or by adding
+    'break-system-packages = true' to your pip.conf file. The latter
+    will permanently disable this error.
+    
+    If you disable this error, we STRONGLY recommend that you additionally
+    pass the '--user' flag to pip, or set 'user = true' in your pip.conf
+    file. Failure to do this can result in a broken Homebrew installation.
+    
+    Read more about this behavior here: <https://peps.python.org/pep-0668/>
+
+note: If you believe this is a mistake, please contact your Python installation or OS distribution provider. You can override this, at the risk of breaking your Python installation or OS, by passing --break-system-packages.
+hint: See PEP 668 for the detailed specification.
+```
+
+Scary stuff. I've never used a virtual environment with RStudio before but thought I'd give it a shot. So I created a `venv` folder in the repository, and followed the instructions in the error message: 
+
+```{bash}
+python3 -m venv venv
+source venv/bin/activate
+python3 -m pip install shinylive
+```
+
+After doing this, running `quarto render` was successful! Package installation...always fun.

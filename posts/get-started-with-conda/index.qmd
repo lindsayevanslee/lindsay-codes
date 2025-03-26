@@ -83,3 +83,14 @@ conda activate myenv
 conda env update --file environment.yml --prune
 ```
 
+
+# Update 2025-02-09 - removing packages from a conda environment
+
+I've learned that the above command in my last update `conda env update` doesn't remove any packages that you remove from your `environment.yml` file. In order to remove packages no longer needed, you need to delete and recreate your environment:
+
+```{bash}
+conda deactivate
+conda env remove --name myenv
+conda env create --file environment.yml
+conda activate myenv
+```
