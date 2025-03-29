@@ -2,8 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/get-started-with-uv/index.html",
-      "/posts/old-french-ai/index.html",
       "/posts/connect-to-gpu/index.html",
       "/posts/library-of-congress-download/index.html",
       "/posts/shinylive/index.html",
@@ -16,8 +14,7 @@
       "/posts/webscraping-showtimes/index.html",
       "/posts/power-bi-custom-map/index.html",
       "/posts/font-design/index.html",
-      "/posts/webscraping-screenshots/index.html",
-      "/posts/gabfest-interruptions/index.html"
+      "/posts/webscraping-screenshots/index.html"
     ]
   }
 ]

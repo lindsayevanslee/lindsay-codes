@@ -7,6 +7,7 @@ website:
   site-url: "https://lindsay.codes"
   description: "Lindsay Lee's techy blog"
   favicon: "favicon.png"
+  draft-mode: gone
   navbar:
     background: "#eee8d5"
     right:

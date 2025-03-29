@@ -19,99 +19,99 @@ I've been playing around with some AI stuff, trying to train some models using `
 
 There are several different cloud providers that have remote development environment options. I chose Google just because I already had a Google Cloud Platform account. First step would be to create that account, and then:
 
-1. Create a new project in Google Cloud Platform (GCP)
-2. Go to "API and Services" → "Enable APIs and Services"
-3. Search for "Compute Engine API" and enable it
-
+1.  Create a new project in Google Cloud Platform (GCP)
+2.  Go to "API and Services" → "Enable APIs and Services"
+3.  Search for "Compute Engine API" and enable it
 
 ## 2. Creating a virutal machine instance
 
-1. In GCP, go to Compute Engine → VM Instances
-2. Click "Create Instance" and configure with these specifications:
-   - Name: Choose something descriptive (mine is called "vm-old-french-ai")
-   - Region: Choose one close to your location whcih has this type of capacity available
-   - Machine Configuration:
-     - Click "GPUs"
-     - Select series: N1
-     - GPU: Add 1 NVIDIA T4
-     - Machine type: n1-standard-4 (4 vCPU, 15GB memory)
-   - Boot disk: Ubuntu 20.04 LTS (100GB)
+1.  In GCP, go to Compute Engine → VM Instances
+2.  Click "Create Instance" and configure with these specifications:
+    -   Name: Choose something descriptive (mine is called "vm-old-french-ai")
+    -   Region: Choose one close to your location whcih has this type of capacity available
+    -   Machine Configuration:
+        -   Click "GPUs"
+        -   Select series: N1
+        -   GPU: Add 1 NVIDIA T4
+        -   Machine type: n1-standard-4 (4 vCPU, 15GB memory)
+    -   Boot disk: Ubuntu 20.04 LTS (100GB)
 
 I had to do some trial and error creating a VM. Some errors I got were:
 
-1. Region availability: Not all types of VMs are available in all regions. Choose a region that's as close to you as possible but still has the type of VM you're choosing
-2. Region capacity errors: Some regions have the type of VM available but don't have capacity at that particular moment. You can try again later or again just try choosing a different region
-3. GPU quota error: After resolving region errors, I then got an error "The GPUS-ALL-REGIONS-per-project quota maximum has been exceeded." Click "Request Quota" in the notification, then "Edit Quota". Request a quota of 1 GPU. Give some details about the project, and then request. This request is reviewed by the Google team. In my case, approval came within minutes.
+1.  Region availability: Not all types of VMs are available in all regions. Choose a region that's as close to you as possible but still has the type of VM you're choosing
+2.  Region capacity errors: Some regions have the type of VM available but don't have capacity at that particular moment. You can try again later or again just try choosing a different region
+3.  GPU quota error: After resolving region errors, I then got an error "The GPUS-ALL-REGIONS-per-project quota maximum has been exceeded." Click "Request Quota" in the notification, then "Edit Quota". Request a quota of 1 GPU. Give some details about the project, and then request. This request is reviewed by the Google team. In my case, approval came within minutes.
 
 ## 3. SSH key setup
 
 After the VM is set up, you next have to set up the connection to the VM using SSH:
 
-1. Generate an SSH key by opening your terminal on your local machine and running:
+1.  Generate an SSH key by opening your terminal on your local machine and running:
 
-```bash
+``` bash
 ssh-keygen -t rsa -b 4096 -C "your-email@example.com"
 ```
+
 Press Enter to accept the default file location, and optionally set a passphrase.
 
-2. Copy your public key:
+2.  Copy your public key:
 
-```bash
+``` bash
 cat ~/.ssh/id_rsa.pub
 ```
 
-3. Add the key to your VM:
-   - Stop the VM instance
-   - Click on the VM name
-   - Click "Edit"
-   - Scroll down to "SSH Keys"
-   - Click "Add Item"
-   - Paste your public key
-   
+3.  Add the key to your VM:
+    -   Stop the VM instance
+    -   Click on the VM name
+    -   Click "Edit"
+    -   Scroll down to "SSH Keys"
+    -   Click "Add Item"
+    -   Paste your public key
+
 Note the username at the end of your SSH key (format: `YOUR_USERNAME@computer`) - you'll need this later.
 
 ## 4. VS Code remote setup
 
 We'll use VS Code as the development environment to connect to the new VM with:
 
-1. In VS Code, install Microsoft's "Remote Development" extension pack
-2. Open VS Code command palette (Ctrl/Cmd + Shift + P)
-3. Type "Remote-SSH: Open Configuration File"
-4. Select the first configuration file option
-5. Add this configuration (replace the placeholders):
+1.  In VS Code, install Microsoft's "Remote Development" extension pack
+2.  Open VS Code command palette (Ctrl/Cmd + Shift + P)
+3.  Type "Remote-SSH: Open Configuration File"
+4.  Select the first configuration file option
+5.  Add this configuration (replace the placeholders):
 
-```bash
+``` bash
 Host YOUR_VM_NAME
     HostName YOUR_EXTERNAL_IP
     User YOUR_USERNAME
     IdentityFile ~/.ssh/id_rsa
 ```
 
-- `YOUR_VM_NAME`: Whatever you want to call this connection. I used the name of the VM I created in Google
-- `YOUR_EXTERNAL_IP`: Find this in your Google Cloud VM instances list
-- `YOUR_USERNAME`: The username from your SSH key 
+-   `YOUR_VM_NAME`: Whatever you want to call this connection. I used the name of the VM I created in Google
+-   `YOUR_EXTERNAL_IP`: Find this in your Google Cloud VM instances list
+-   `YOUR_USERNAME`: The username from your SSH key
 
-6. Open VS Code command palette (Ctrl/Cmd + Shift + P) again and search for "Remote-SSH: Connect to Host"
-7. Select the configuration you just created
-8. If it asks you anything, say "continue" or "yes"
+6.  Open VS Code command palette (Ctrl/Cmd + Shift + P) again and search for "Remote-SSH: Connect to Host"
+7.  Select the configuration you just created
+8.  If it asks you anything, say "continue" or "yes"
 
 If it works without error, you're in!
 
 If it fails to connect, first try connecting via terminal:
 
-```bash
+``` bash
 ssh -v YOUR_USERNAME@YOUR_EXTERNAL_IP -i ~/.ssh/id_rsa
 ```
 
 Accept the authenticity prompt by typing "yes". You should see a prompt like this if it worked:
 
-```bash
+``` bash
 YOUR_USERNAME@vm-name:~$
 ```
 
 You can also verify the connection by running this in the remote terminal:
 
-```bash
+``` bash
 pwd   # Print working directory
 whoami   # Should show your username
 hostname  # Should show your VM name
@@ -119,24 +119,23 @@ hostname  # Should show your VM name
 
 If this terminal connection works but VS Code doesn't, close VS Code completely and try again.
 
-
-
 ## 5. Python environment setup
 
 After connecting to the VM, now we have to set up the python development environment so that we can actually run stuff.
 
-1. Install Miniconda:
+1.  Install Miniconda:
 
-```bash
+``` bash
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 chmod +x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda3-latest-Linux-x86_64.sh
 ```
+
 Follow the prompts and say 'yes' to initialization.
 
-2. If you have an existing project with an `environment.yml` file:
+2.  If you have an existing project with an `environment.yml` file:
 
-```bash
+``` bash
 conda env create -f environment.yml
 conda activate YOUR_ENV_NAME
 ```
@@ -145,49 +144,51 @@ conda activate YOUR_ENV_NAME
 
 My code is hosted on GitHub so I also have to set up git to work with this code on the VM:
 
-1. Install git:
-```bash
+1.  Install git:
+
+``` bash
 sudo apt update
 sudo apt install git -y
 ```
 
-2. Configure git:
-```bash
+2.  Configure git:
+
+``` bash
 git config --global user.name "Your Name"
 git config --global user.email "your.email@example.com"
 ```
 
-3. For repository access, create a fine-grained Personal Access Token (PAT) on GitHub:
-   - Go to GitHub Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens
-   - Set Repository Access to "Only select repositories"
-   - Choose your specific repository
-   - Under Permissions → Repository permissions, set:
-     - Contents: "Read and write"
-     - Commit statuses: "Read and write"
-     - Metadata: "Read-only"
-     - Pull requests: "Read and write"
-     - Workflows: "Read and write"
+3.  For repository access, create a fine-grained Personal Access Token (PAT) on GitHub:
+    -   Go to GitHub Settings → Developer Settings → Personal Access Tokens → Fine-grained tokens
+    -   Set Repository Access to "Only select repositories"
+    -   Choose your specific repository
+    -   Under Permissions → Repository permissions, set:
+        -   Contents: "Read and write"
+        -   Commit statuses: "Read and write"
+        -   Metadata: "Read-only"
+        -   Pull requests: "Read and write"
+        -   Workflows: "Read and write"
+4.  Clone your repository:
 
-4. Clone your repository:
-
-```bash
+``` bash
 git clone YOUR_REPO_URL
 ```
+
 Use your GitHub username and PAT when prompted for credentials.
 
 ## 7. NVIDIA and CUDA setup
 
 Next we have to install some stuff that lets you use the GPUs. Don't ask me what a GPU is or what all this does, but it worked:
 
-1. Verify that we're on Ubuntu:
+1.  Verify that we're on Ubuntu:
 
-```bash
+``` bash
 lsb_release -a
 ```
 
-2. Install NVIDIA drivers and CUDA:
+2.  Install NVIDIA drivers and CUDA:
 
-```bash
+``` bash
 sudo add-apt-repository ppa:graphics-drivers/ppa
 sudo apt update
 sudo apt install -y ubuntu-drivers-common
@@ -196,9 +197,9 @@ sudo apt install -y nvidia-driver-560 #Choose the driver from the above command 
 sudo apt install -y nvidia-cuda-toolkit
 ```
 
-3. Reset your VM by going to GCP list of VM instances and clicking "..." -> "Reset". Verify installation of drivers worked with:
+3.  Reset your VM by going to GCP list of VM instances and clicking "..." -\> "Reset". Verify installation of drivers worked with:
 
-```bash
+``` bash
 nvidia-smi
 nvcc --version
 ```
@@ -207,19 +208,21 @@ nvcc --version
 
 Finally we have to check that our installation of pytorch is able to access the GPU:
 
-1. Verify GPU access:
-```python
+1.  Verify GPU access:
+
+``` python
 python -c "import torch; print('PyTorch version:', torch.__version__); print('CUDA available:', torch.cuda.is_available()); print('CUDA version PyTorch was built with:', torch.version.cuda); print('GPU device:', torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'None')"
 ```
 
-2. Test GPU functionality:
-```python
+2.  Test GPU functionality:
+
+``` python
 python -c "import torch; x = torch.randn(1000, 1000).cuda(); y = torch.randn(1000, 1000).cuda(); z = torch.matmul(x, y); print('Test completed on GPU')"
 ```
 
 If you get any failures after running this test code, you may need to fiddle with some versions of packages you're installing in your `environment.yml` file. Best advice I can give is to ask ChatGPT/Claude/whatever. This is something that worked for me at one point--uninstalling some package versions and installing other versions with a CUDA toolkit:
 
-```bash
+``` bash
 conda remove pytorch torchvision torchaudio  # Remove CPU version if present
 conda install pytorch torchvision torchaudio cudatoolkit=10.1 -c pytorch
 ```
@@ -230,4 +233,19 @@ If you see a version mismatch between CUDA and PyTorch, it should probably be ok
 
 After all of that, your remote environment should be ready to go to run some AI models at non-sluggish speeds. Remember to turn your compute off when you aren't using it or prepare for 💸💸💸
 
+# Update 2025-03-26 - Another way to set up NVIDIA and CUDA
+
+I deleted my VM while I wasn't planning in using it for awhile, so that I wouldn't incur charges from Google Cloud. When I was ready to get back to work, I followed the instructions on this page to recreate it. I ran into issues trying to set up NVIDIA and CUDA--the driver would not install correctly. I did some more googling and consulting with Claude to find an alternative route, and found [these instructions](https://cloud.google.com/compute/docs/gpus/install-drivers-gpu#linux) from Google Cloud. They provide their own installation package which is meant to be easier and more automatically compatible with their machines. The package can be found on their [GitHub](https://github.com/GoogleCloudPlatform/compute-gpu-installation/releases). They aren't written incredibly clearly, but all I had to do was run the following in the terminal of the VM:
+
+```{bash}
+curl -fSsL -O https://github.com/GoogleCloudPlatform/compute-gpu-installation/releases/download/cuda-installer-v1.2.0/cuda_installer.pyz
+sudo python3 cuda_installer.pyz install_cuda
+```
+
+It will take awhile to run, and it will reboot the VM in the process. When it's done rebooting, rerun the installer command (`sudo python3 cuda_installer.pyz install_cuda`) to restart the process. You're done when you get a message that it's successfully installed. Test your installation was successful with: 
+
+```{bash}
+nvidia-smi
+nvcc --version
+```
 

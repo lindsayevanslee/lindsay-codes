@@ -211,6 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#pytorch-gpu-setup" id="toc-pytorch-gpu-setup" class="nav-link" data-scroll-target="#pytorch-gpu-setup">8. PyTorch GPU setup</a></li>
   </ul></li>
   <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#update-2025-03-26---another-way-to-set-up-nvidia-and-cuda" id="toc-update-2025-03-26---another-way-to-set-up-nvidia-and-cuda" class="nav-link" data-scroll-target="#update-2025-03-26---another-way-to-set-up-nvidia-and-cuda">Update 2025-03-26 - Another way to set up NVIDIA and CUDA</a></li>
   </ul>
 </nav>
     </div>
@@ -409,6 +410,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
 <p>After all of that, your remote environment should be ready to go to run some AI models at non-sluggish speeds. Remember to turn your compute off when you aren’t using it or prepare for 💸💸💸</p>
+</section>
+<section id="update-2025-03-26---another-way-to-set-up-nvidia-and-cuda" class="level1">
+<h1>Update 2025-03-26 - Another way to set up NVIDIA and CUDA</h1>
+<p>I deleted my VM while I wasn’t planning in using it for awhile, so that I wouldn’t incur charges from Google Cloud. When I was ready to get back to work, I followed the instructions on this page to recreate it. I ran into issues trying to set up NVIDIA and CUDA–the driver would not install correctly. I did some more googling and consulting with Claude to find an alternative route, and found <a href="https://cloud.google.com/compute/docs/gpus/install-drivers-gpu#linux">these instructions</a> from Google Cloud. They provide their own installation package which is meant to be easier and more automatically compatible with their machines. The package can be found on their <a href="https://github.com/GoogleCloudPlatform/compute-gpu-installation/releases">GitHub</a>. They aren’t written incredibly clearly, but all I had to do was run the following in the terminal of the VM:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fSsL</span> <span class="at">-O</span> https://github.com/GoogleCloudPlatform/compute-gpu-installation/releases/download/cuda-installer-v1.2.0/cuda_installer.pyz</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> python3 cuda_installer.pyz install_cuda</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>It will take awhile to run, and it will reboot the VM in the process. When it’s done rebooting, rerun the installer command (<code>sudo python3 cuda_installer.pyz install_cuda</code>) to restart the process. You’re done when you get a message that it’s successfully installed. Test your installation was successful with:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nvidia-smi</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">nvcc</span> <span class="at">--version</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
