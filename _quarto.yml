@@ -18,6 +18,8 @@ website:
         href: https://linkedin.com/in/lindsayevanslee
       - icon: github
         href: https://github.com/lindsayevanslee
+      - icon: bluesky
+        href: https://bsky.app/profile/lindsay.codes
 
 format:
   html:
