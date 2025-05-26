@@ -7,7 +7,7 @@ website:
   site-url: "https://lindsay.codes"
   description: "Lindsay Lee's techy blog"
   favicon: "favicon.png"
-  draft-mode: gone
+  draft-mode: unlinked
   navbar:
     background: "#eee8d5"
     right:
@@ -32,4 +32,9 @@ resources:
   - CNAME
 
 editor: visual
+
+# Include both posts and drafts directories
+posts:
+  - posts/
+  - drafts/
 
