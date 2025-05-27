@@ -39,3 +39,7 @@ On 8/18 I noticed the screen got stuck again without the "thinking" light. I tri
 
 The issue is now that I don't have an accurate reading of how long the batteries can last with a 12-hour refresh rate, because I charged them before I really needed to. However I do at least have confirmation that a less-frequent refresh rate makes the batteries last longer--I was already up to 4 months on one charge with this twice-daily rate. 
 
+# Update 2025-05-27
+
+A couple of weeks ago I noticed that the screen stopped updating again. I tried resetting it, but it didn't work, and no lights turned on. I changed the batteries to rechargeable lithium batteries, but still coudln't get it to respond. I tried plugging it in to the computer, and it did refresh, but still on battery power it didn't work. I switched to new disposable batteries, and this time I would at least get some lights, but still no refresh. Several times turned the battery pack on and off, I plugged it in, reran the code, hit "Stop", unplugged, tried to reset again, got nothing. After making some edits to the logging of the code, it seemed like there's some issue with connecting to the wifi. Seemingly it connected more easily when plugged in, but not on battery power, and I'm not sure why. I unplugged and tried resetting again, nothing. I waited a few more minutes, and finally it reset with the normal lights. So still not sure what's going on or what the advice is here. Just try not to breathe on it too hard I guess and hopefully it'll keep chugging along.
+
