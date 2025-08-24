@@ -2,7 +2,6 @@
 title: "Using generative AI on medieval manuscripts"
 description: "AI, oh my!"
 date: "2025-08-24"
-draft: true
 image: sam2_masks.png
 image-alt: "A medieval manuscript page overlayed with colored shapes marking different segments of the image, from the Segment Anything Model 2 (SAM2)"
 categories: [ai, humanities, python]
