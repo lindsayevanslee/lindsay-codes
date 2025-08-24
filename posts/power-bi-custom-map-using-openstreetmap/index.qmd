@@ -1,7 +1,7 @@
 ---
 title: "More custom Power BI maps with OpenStreetMap"
 description: "Many fewer tools, much better maps"
-date: "2025-08-24"
+date: "2025-08-25"
 image: arcgis-map.png
 image-alt: "Screenshot of a grayscale map overlayed with orange building shapes"
 categories: [maps, power bi, python]
