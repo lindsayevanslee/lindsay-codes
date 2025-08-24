@@ -13,7 +13,7 @@ execute:
 
 [Way back](../power-bi-custom-map/index.qmd) I figured out a way to create a manual shape map in Power BI by using a hodge podge of tools and formats. It worked but was painful.
 
-Map stuff came up again at work recently, so I got to rethinking this task and found a much more elegant solution using OpenStreetMap to pull the shapes I need directly and then converting them to the EsriJSON format that Power BI's ArcGIS visualization can read. The notebook `shapes_from_openstreetmap.ipynb` in [this GitHub repo](https://github.com/lindsayevanslee/fun-with-maps) has all the code.
+Map stuff came up again at work recently, so I got to rethinking this task and found a much more elegant solution using OpenStreetMap to pull the shapes I need directly and then converting them to the EsriJSON format that Power BI's ArcGIS visualization can read. The notebook `shapes_from_openstreetmap.ipynb` in [this GitHub repo](https://github.com/lindsayevanslee/fun-with-maps) has all the code. This resource [Python for Geographic Data Analysis](https://pythongis.org/part2/chapter-09/nb/00-retrieving-osm-data.html) helped me get started.
 
 At the top of the notebook you put the name of the place that you want to pull all the buildings for. If you run the notebook interactively, you can check the map that gets generated to make sure it looks right. The notebook then converts the geometry into EsriJSON and exports a csv file with the json strings in a column `coordinates`. This can then be used in the ArcGIS visualization in Power BI like so:
 
