@@ -7,10 +7,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Lindsay Lee">
-<meta name="dcterms.date" content="2023-03-26">
-<meta name="description" content="It took like 4 different programs but we did it.">
+<meta name="dcterms.date" content="2025-08-24">
+<meta name="description" content="Many fewer tools, much better maps">
 
-<title>Drawing a custom map for Power BI – lindsay.codes</title>
+<title>More custom Power BI maps with OpenStreetMap – lindsay.codes</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,41 +22,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -158,16 +123,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Drawing a custom map for Power BI</h1>
+      <h1 class="title">More custom Power BI maps with OpenStreetMap</h1>
                   <div>
         <div class="description">
-          It took like 4 different programs but we did it.
+          Many fewer tools, much better maps
         </div>
       </div>
                           <div class="quarto-categories">
                 <div class="quarto-category">maps</div>
                 <div class="quarto-category">power bi</div>
-                <div class="quarto-category">r</div>
+                <div class="quarto-category">python</div>
               </div>
                   </div>
   </div>
@@ -185,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">March 26, 2023</p>
+        <p class="date">August 24, 2025</p>
       </div>
     </div>
     
@@ -206,62 +171,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<p><em><strong>Update 2025-08-24</strong>: I’ve since found a much easier way to do this using OpenStreetMap, which you can read about <a href="../../posts/power-bi-custom-map-using-openstreetmap/index.html">here</a>.</em></p>
-<p>In Power BI it’s fairly easy to generate a map with location data that fits typical geographical boundaries like countries or states. If you want to draw a very custom map, it becomes more difficult. This is a way I figured out that seems much more complicated than it needs to be. I’m sure (I hope) there is an easier way that I’ll discover later.</p>
-<p>Currently Power BI has multiple built-in mapping visualizations. You can draw custom shapes with the “Shape Map”, but it will be on a blank white background. I wanted my map to lay on top of a typical street map. The ArcGIS visualization makes this possible.</p>
-<p>If you have an ArcGIS license, you can draw your custom maps within ArcGIS itself and access them via Power BI. This didn’t work for me for a couple reasons: 1. I didn’t have a license, and 2. I don’t know if you can connect your data in Power BI to reference layers you create within ArcGIS. So that makes I need to find a way to have custom location data within Power BI formatted in such a way that it is parseable by the ArcGIS visualization. After lots of digging (ArcGIS’s documentation is lacking), I found that custom shapes can be read from Power BI data in an <a href="https://doc.arcgis.com/en/power-bi/get-started/prepare-your-data.htm">“EsriJSON format”</a>.</p>
-<p>First, I drew my map in Google Earth. Start a new project (it works best in Chrome), and click “New feature” -&gt; “Draw line or shape”.</p>
-<p><img src="google-earth-draw.png" class="img-fluid" alt="Screenshot of Google Earth showing &quot;Draw line or shape&quot; option"></p>
-<p>Trace out your shape, and give it a name. When you’ve finished drawing your map, go to the “…” menu and click “Export as KML file”. I don’t really know what a KML is, but from what I can tell it’s a map format that Google likes to use.</p>
-<p><img src="google-earth-export-kml.png" class="img-fluid" alt="Screenshot of Google Earth showing &quot;Export as KML file&quot; option"></p>
-<p>Next, the KML file needs to be converted to a form of JSON called GeoJSON. Again, don’t ask me what a GeoJSON is, but from context clues I’m gonna say it’s a JSON for geographic data.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#open necessary libraries</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#read in kml file</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>map_geo <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_read</span>(<span class="st">"Example Project.kml"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#spit it back out again as a GeoJSON</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>map_geo <span class="sc">%&gt;%</span> </span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_zm</span>() <span class="sc">%&gt;%</span> <span class="co">#remove the Z dimension from the object</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_write</span>(<span class="st">"Example Project.geojson"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>GeoJSON isn’t good enough for finicky ArcGIS/Power BI however, so we need to do a bit more wrangling to create a table that has shape data in an EsriJSON format. <a href="https://docs.safe.com/fme/html/FME_Desktop_Documentation/FME_ReadersWriters/esrijson/esrijson.htm">This website</a> and <a href="https://community.esri.com/t5/arcgis-for-power-bi-questions/some-polygons-not-displaying-in-powerbi-visual/td-p/1168070">this question on the ArcGIS forum</a> helped me figure out what this mysterious EsriJSON needed to look like.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#open necessary libraries</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#read in geojson file</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>list_json <span class="ot">&lt;-</span> <span class="fu">read_json</span>(<span class="st">"Example Project.geojson"</span>)</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#wrangle into EsriJSON format</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>df_parsed <span class="ot">&lt;-</span> list_json<span class="sc">$</span>features <span class="sc">%&gt;%</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(<span class="at">.f =</span> <span class="cf">function</span>(lst_elm) {</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    lst_elm <span class="sc">%&gt;%</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">enframe</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pivot_wider</span>()</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  }) <span class="sc">%&gt;%</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(properties) <span class="sc">%&gt;%</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>type) <span class="sc">%&gt;%</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest_wider</span>(geometry) <span class="sc">%&gt;%</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">coordinates =</span> <span class="fu">unlist</span>(coordinates, <span class="at">recursive =</span> <span class="cn">FALSE</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">coordinates =</span> <span class="fu">map</span>(coordinates, toJSON, <span class="at">digits =</span> <span class="dv">20</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">coordinates =</span> <span class="fu">as.character</span>(coordinates)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">coordinates =</span> <span class="fu">str_replace</span>(coordinates, <span class="st">"</span><span class="sc">\\</span><span class="st">]$"</span>, <span class="st">'</span><span class="sc">\\</span><span class="st">]</span><span class="sc">\\</span><span class="st">}'</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">coordinates =</span> <span class="fu">str_replace</span>(coordinates, <span class="st">"</span><span class="sc">\\</span><span class="st">["</span>, <span class="st">'</span><span class="sc">\\</span><span class="st">{"rings": </span><span class="sc">\\</span><span class="st">['</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">coordinates =</span> <span class="fu">str_replace_all</span>(coordinates, <span class="st">"</span><span class="sc">\\</span><span class="st">],</span><span class="sc">\\</span><span class="st">["</span>, <span class="st">","</span>))</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co">#print csv with EsriJSON column</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(df_parsed, <span class="at">file =</span> <span class="st">"Example Project.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Finally, load this csv file into your Power BI report, put an ArcGIS visualization on your report canvas, and use the <code>coordinates</code> column in the “Location” field to create your custom map.</p>
-<p><img src="power-bi-map.png" class="img-fluid" alt="Screenshot of Power BI report page with custom map in an ArcGIS visual"></p>
-<p>If you create relationships between this table and other data in your model, then you can overlay more data on this map via coloring, sizing, and tooltips.</p>
-<p>That’s it! Easy! I’m gonna go take a nap.</p>
+<p><a href="../../posts/power-bi-custom-map/index.html">Way back</a> I figured out a way to create a manual shape map in Power BI by using a hodge podge of tools and formats. It worked but was painful.</p>
+<p>Map stuff came up again at work recently, so I got to rethinking this task and found a much more elegant solution using OpenStreetMap to pull the shapes I need directly and then converting them to the EsriJSON format that Power BI’s ArcGIS visualization can read. The notebook <code>shapes_from_openstreetmap.ipynb</code> in <a href="https://github.com/lindsayevanslee/fun-with-maps">this GitHub repo</a> has all the code.</p>
+<p>At the top of the notebook you put the name of the place that you want to pull all the buildings for. If you run the notebook interactively, you can check the map that gets generated to make sure it looks right. The notebook then converts the geometry into EsriJSON and exports a csv file with the json strings in a column <code>coordinates</code>. This can then be used in the ArcGIS visualization in Power BI like so:</p>
+<p><img src="powerbi-map.png" class="img-fluid" alt="Screenshot of a Power BI report showing an ArcGIS grayscale map overlayed with orange building shapes"></p>
+<p>As is this notebook is quite simple at the moment, but could easily be extended however you want. You can add more places to extend your map, or you could enrich your map by adding more columns to this table or connect this table other tables in your data model. If you notice any issues with the data that you pull from OpenStreetMap, you can also edit the data directly in <a href="https://www.openstreetmap.org/about">OpenStreetMap</a> and then re-run the notebook to get the updated shapes.</p>
+<p>The last thing I’ll mention is that I wish this was possible to do in the base <a href="https://learn.microsoft.com/en-us/azure/azure-maps/power-bi-visual-get-started">“Azure map”</a> visual in Power BI. This seems to be the one that Microsoft pushes you to use as they slowly deprecate all their other map visuals, but to date it doesn’t seem possible to draw custom shapes with it. The ArcGIS map looks good, but it’s not the best user experience because it prompts the user to agree to terms and conditions or to log in every time they open the report. Hopefully we’ll be able to accomplish the same thing with Azure Maps soon, and when that day comes I’ll be sure to make yet another post.</p>
 
 
 

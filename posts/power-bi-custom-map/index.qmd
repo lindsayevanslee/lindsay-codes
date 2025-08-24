@@ -9,6 +9,8 @@ execute:
   eval: false
 ---
 
+***Update 2025-08-24**: I've since found a much easier way to do this using OpenStreetMap, which you can read about [here](../power-bi-custom-map-using-openstreetmap/index.qmd).*
+
 In Power BI it's fairly easy to generate a map with location data that fits typical geographical boundaries like countries or states. If you want to draw a very custom map, it becomes more difficult. This is a way I figured out that seems much more complicated than it needs to be. I'm sure (I hope) there is an easier way that I'll discover later.
 
 Currently Power BI has multiple built-in mapping visualizations. You can draw custom shapes with the "Shape Map", but it will be on a blank white background. I wanted my map to lay on top of a typical street map. The ArcGIS visualization makes this possible.
