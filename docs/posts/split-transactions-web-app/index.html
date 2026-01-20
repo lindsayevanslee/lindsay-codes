@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Lindsay Lee">
+<meta name="dcterms.date" content="2026-01-19">
+<meta name="description" content="Not a penny more for app subscriptions">
+
+<title>Vibe-coding a Splitwise replacement – lindsay.codes</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-b95323308a48ed45e363407bc9839ef1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono">
+<meta name="quarto:status" content="draft">
+
+
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">lindsay.codes</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://lindsayevanslee.com"> <i class="bi bi-link" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://linkedin.com/in/lindsayevanslee"> <i class="bi bi-linkedin" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lindsayevanslee"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Vibe-coding a Splitwise replacement</h1>
+                  <div>
+        <div class="description">
+          Not a penny more for app subscriptions
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">ai</div>
+                <div class="quarto-category">web app</div>
+                <div class="quarto-category">firebase</div>
+                <div class="quarto-category">react</div>
+                <div class="quarto-category">vibe-coding</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Lindsay Lee </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#requirements" id="toc-requirements" class="nav-link active" data-scroll-target="#requirements">Requirements</a></li>
+  <li><a href="#setting-up-firebase-infrastructure" id="toc-setting-up-firebase-infrastructure" class="nav-link" data-scroll-target="#setting-up-firebase-infrastructure">Setting Up Firebase Infrastructure</a>
+  <ul class="collapse">
+  <li><a href="#create-a-firebase-project" id="toc-create-a-firebase-project" class="nav-link" data-scroll-target="#create-a-firebase-project">1. Create a Firebase Project</a></li>
+  <li><a href="#enable-authentication" id="toc-enable-authentication" class="nav-link" data-scroll-target="#enable-authentication">2. Enable Authentication</a></li>
+  <li><a href="#create-firestore-database" id="toc-create-firestore-database" class="nav-link" data-scroll-target="#create-firestore-database">3. Create Firestore Database</a></li>
+  <li><a href="#get-your-configuration-object" id="toc-get-your-configuration-object" class="nav-link" data-scroll-target="#get-your-configuration-object">4. Get Your Configuration Object</a></li>
+  <li><a href="#set-up-environment-variables" id="toc-set-up-environment-variables" class="nav-link" data-scroll-target="#set-up-environment-variables">5. Set Up Environment Variables</a></li>
+  <li><a href="#add-secrets-to-github-for-cicd" id="toc-add-secrets-to-github-for-cicd" class="nav-link" data-scroll-target="#add-secrets-to-github-for-cicd">6. Add Secrets to GitHub (for CI/CD)</a></li>
+  <li><a href="#set-up-firestore-security-rules" id="toc-set-up-firestore-security-rules" class="nav-link" data-scroll-target="#set-up-firestore-security-rules">7. Set Up Firestore Security Rules</a></li>
+  </ul></li>
+  <li><a href="#iterating" id="toc-iterating" class="nav-link" data-scroll-target="#iterating">Iterating</a></li>
+  <li><a href="#final-thoughts-on-vibe-coding" id="toc-final-thoughts-on-vibe-coding" class="nav-link" data-scroll-target="#final-thoughts-on-vibe-coding">Final thoughts on vibe-coding</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<p>About a year ago I took a family trip to Ireland, and we used Splitwise to keep track of shared expenses. Splitwise has been a staple of just about every trip I’ve been on since grad school, but like everything else on the planet, it’s becoming less and less useful as more and more features are shoved behind a paywall.</p>
+<p>I got to thinking though, what is Splitwise but just a fancy spreadsheet?? I could do that! Who needs ’em! So about a year ago I started trying to build <a href="https://lindsayevanslee.github.io/split-transactions">my own web app</a> replacement for Splitwise, as a foray into the world of “vibe-coding” (a phrase that makes me a little bit nauseous but I’ll try to move past that for now).</p>
+<section id="requirements" class="level2">
+<h2 class="anchored" data-anchor-id="requirements">Requirements</h2>
+<p>I wanted an app where you could:</p>
+<ul>
+<li>Create groups to track shared expenses</li>
+<li>Add transactions and split them among group members</li>
+<li>Use different kinds of split types: equal, percentage, or custom ratios</li>
+<li>Invite other users to join your groups</li>
+<li>See who owes whom with automatic balance calculations</li>
+<li>Settle up and track payment history</li>
+</ul>
+<p>I started off building the app with various tools: GitHub Copilot, Cursor, and Claude. I knew I wanted to use GitHub Actions and GitHub Pages for deployment, just because I have done that before and knew it worked well. But as far as building an actual web app, I’d never done that before–I’d only ever built fairly simple websites using Quarto.</p>
+<p>After prompting the tools with my requirements, they lead me to build a basic version with the tech stack:</p>
+<ul>
+<li><strong>React 19</strong> with <strong>TypeScript</strong> for type-safe UI development</li>
+<li><strong>Vite</strong> for lightning-fast builds and hot module replacement</li>
+<li><strong>Material-UI (MUI)</strong> for a polished component library</li>
+<li><strong>Firebase Authentication</strong> for email/password login</li>
+<li><strong>Cloud Firestore</strong> for real-time NoSQL database</li>
+</ul>
+<p>The part that was completely foreign to me the infrastructure for authentication and shared data storage. I had never heard of Firebase before, but so far it has worked well (and for free).</p>
+</section>
+<section id="setting-up-firebase-infrastructure" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-firebase-infrastructure">Setting Up Firebase Infrastructure</h2>
+<section id="create-a-firebase-project" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-firebase-project">1. Create a Firebase Project</h3>
+<ol type="1">
+<li>Go to <a href="https://console.firebase.google.com">Firebase Console</a></li>
+<li>Click <strong>“Create a project”</strong> or <strong>“Add project”</strong></li>
+<li>Enter a project name (e.g., “split-transactions”)</li>
+<li>You can disable Google Analytics for now if you prefer</li>
+<li>Click <strong>“Create project”</strong> and wait for it to provision</li>
+</ol>
+</section>
+<section id="enable-authentication" class="level3">
+<h3 class="anchored" data-anchor-id="enable-authentication">2. Enable Authentication</h3>
+<ol type="1">
+<li>In the Firebase Console, click <strong>“Authentication”</strong> in the left sidebar</li>
+<li>Click <strong>“Get Started”</strong></li>
+<li>Click the <strong>“Sign-in method”</strong> tab</li>
+<li>Click on <strong>“Email/Password”</strong> in the provider list</li>
+<li>Toggle the <strong>“Enable”</strong> switch</li>
+<li>Click <strong>“Save”</strong></li>
+</ol>
+<p>That’s it for basic authentication! Firebase now handles user registration, login, password resets, and session management for you.</p>
+</section>
+<section id="create-firestore-database" class="level3">
+<h3 class="anchored" data-anchor-id="create-firestore-database">3. Create Firestore Database</h3>
+<p>To store data like users, groups, and transactions, you need to set up a Firestore database:</p>
+<ol type="1">
+<li>In the Firebase Console, click <strong>“Firestore Database”</strong> in the left sidebar</li>
+<li>Click <strong>“Create database”</strong></li>
+<li>Choose <strong>“Start in production mode”</strong> (we’ll set up proper security rules next)</li>
+<li>Choose a location closest to your users (e.g., <code>us-central1</code> for North America, <code>europe-west1</code> for Europe)</li>
+<li>Click <strong>“Enable”</strong></li>
+</ol>
+<p>The database will take a moment to provision. Once ready, you’ll see an empty database console where you can manually add collections and documents for testing.</p>
+</section>
+<section id="get-your-configuration-object" class="level3">
+<h3 class="anchored" data-anchor-id="get-your-configuration-object">4. Get Your Configuration Object</h3>
+<p>Now you need to connect your app to Firebase:</p>
+<ol type="1">
+<li>In the Firebase Console, click the <strong>gear icon (⚙️)</strong> next to “Project Overview”</li>
+<li>Click <strong>“Project settings”</strong></li>
+<li>Scroll down to the <strong>“Your apps”</strong> section</li>
+<li>Click the <strong>web icon (<code>&lt;/&gt;</code>)</strong></li>
+<li>Register your app with a nickname (e.g., “split-transactions-web”)</li>
+<li>You’ll see a configuration object like this:</li>
+</ol>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> firebaseConfig <span class="op">=</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">apiKey</span><span class="op">:</span> <span class="st">"AIzaSyB..."</span><span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">authDomain</span><span class="op">:</span> <span class="st">"your-project.firebaseapp.com"</span><span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">projectId</span><span class="op">:</span> <span class="st">"your-project-id"</span><span class="op">,</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">storageBucket</span><span class="op">:</span> <span class="st">"your-project.appspot.com"</span><span class="op">,</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">messagingSenderId</span><span class="op">:</span> <span class="st">"123456789"</span><span class="op">,</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">appId</span><span class="op">:</span> <span class="st">"1:123456789:web:abc123def456"</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Keep these values handy—you’ll need them for your environment variables.</p>
+</section>
+<section id="set-up-environment-variables" class="level3">
+<h3 class="anchored" data-anchor-id="set-up-environment-variables">5. Set Up Environment Variables</h3>
+<p>Create a <code>.env</code> file in your project root (and add it to <code>.gitignore</code>!):</p>
+<pre class="env"><code>VITE_FIREBASE_API_KEY=AIzaSyB...
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+VITE_FIREBASE_APP_ID=1:123456789:web:abc123def456</code></pre>
+<p>The <code>VITE_</code> prefix is required for Vite to expose these variables to your frontend code via <code>import.meta.env</code>.</p>
+</section>
+<section id="add-secrets-to-github-for-cicd" class="level3">
+<h3 class="anchored" data-anchor-id="add-secrets-to-github-for-cicd">6. Add Secrets to GitHub (for CI/CD)</h3>
+<p>For automated deployments, you need to add these values as GitHub secrets:</p>
+<ol type="1">
+<li>Go to your GitHub repository</li>
+<li>Click <strong>“Settings”</strong> &gt; <strong>“Secrets and variables”</strong> &gt; <strong>“Actions”</strong></li>
+<li>Click <strong>“New repository secret”</strong></li>
+<li>Add each Firebase configuration value as a separate secret:
+<ul>
+<li><code>VITE_FIREBASE_API_KEY</code></li>
+<li><code>VITE_FIREBASE_AUTH_DOMAIN</code></li>
+<li><code>VITE_FIREBASE_PROJECT_ID</code></li>
+<li><code>VITE_FIREBASE_STORAGE_BUCKET</code></li>
+<li><code>VITE_FIREBASE_MESSAGING_SENDER_ID</code></li>
+<li><code>VITE_FIREBASE_APP_ID</code></li>
+</ul></li>
+</ol>
+<p>Your GitHub Actions workflow can then reference these as <code>${{ secrets.VITE_FIREBASE_API_KEY }}</code>, etc.</p>
+</section>
+<section id="set-up-firestore-security-rules" class="level3">
+<h3 class="anchored" data-anchor-id="set-up-firestore-security-rules">7. Set Up Firestore Security Rules</h3>
+<p>Firestore Security Rules are server-side access controls that determine who can read, write, update, and delete data in your database. They’re written in a declarative language and evaluated by Firebase’s servers—not your client code—so they can’t be bypassed by malicious users.</p>
+<p>Without rules (or with overly permissive rules), anyone could:</p>
+<ul>
+<li>Read all your users’ data</li>
+<li>Modify or delete any document</li>
+<li>Create spam or malicious content</li>
+</ul>
+<p>Rules are essential for any production app.</p>
+<p>You can edit rules in the Firebase Console, but you can also manage them via code in your repository. This is what the AI tools help me set up:</p>
+<ol type="1">
+<li><strong>Create a <code>firestore.rules</code> file</strong> in your project root. Here is a snippet:</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rules_version <span class="op">=</span> <span class="st">'2'</span><span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>service cloud<span class="op">.</span><span class="at">firestore</span> {</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  match <span class="op">/</span>databases<span class="op">/</span>{database}<span class="ss">/documents {</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ss">    // Helper function to check if user is authenticated</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ss">    function isAuthenticated</span><span class="sc">()</span><span class="ss"> {</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ss">      return request.auth != null;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ss">    }</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ss">    // Helper function to check if user is the owner of a group</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ss">    function isGroupOwner</span><span class="sc">(</span><span class="ss">groupId</span><span class="sc">)</span><span class="ss"> {</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ss">      return isAuthenticated</span><span class="sc">()</span><span class="ss"> &amp;&amp;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ss">             get</span><span class="sc">(</span><span class="ss">/databases/$</span><span class="sc">(</span><span class="ss">database</span><span class="sc">)</span><span class="ss">/documents/groups/</span><span class="fu">$</span>(groupId))<span class="op">.</span><span class="at">data</span><span class="op">.</span><span class="at">userId</span> <span class="op">==</span> request<span class="op">.</span><span class="at">auth</span><span class="op">.</span><span class="at">uid</span><span class="op">;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Helper function to check if user is a member of a group</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">function</span> <span class="fu">isGroupMember</span>(groupId) {</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> <span class="fu">isAuthenticated</span>() <span class="op">&amp;&amp;</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>             request<span class="op">.</span><span class="at">auth</span><span class="op">.</span><span class="at">uid</span> <span class="kw">in</span> <span class="kw">get</span>(<span class="ss">/databases/</span><span class="fu">$</span>(database)<span class="op">/</span>documents<span class="op">/</span>groups<span class="op">/</span><span class="fu">$</span>(groupId))<span class="op">.</span><span class="at">data</span><span class="op">.</span><span class="at">memberUserIds</span><span class="op">;</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li><strong>Configure <code>firebase.json</code></strong> to reference your rules file:</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"firestore"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"rules"</span><span class="fu">:</span> <span class="st">"firestore.rules"</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"indexes"</span><span class="fu">:</span> <span class="st">"firestore.indexes.json"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="3" type="1">
+<li><strong>Deploy rules</strong> using the Firebase CLI:</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">firebase</span> deploy <span class="at">--only</span> firestore:rules</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="iterating" class="level2">
+<h2 class="anchored" data-anchor-id="iterating">Iterating</h2>
+<p>When I first started building this app about a year ago, I struggled quite a bit to get things working well. At the time, these coding tools were less advanced and automated than they are now, so it still involved a lot of copy/pasting and manual testing. The AI couldn’t directly see the results of what it built. I also would experience issues where my local dev deployment would work differently than the version deployed via GitHub Actions.</p>
+<p>I got a very basic version of the app set up, it still had bugs, so I left it for awhile. But recently people seem to be having technological epiphanies using Claude Code, so in the past few days I decided to dive back in and see if I can get the app in a more polished state.</p>
+<p>This will be surprising to no one, but these days Claude Code is so much more autonomous and better able to recognize and fix issues as they arise. I even integrated the <a href="https://til.simonwillison.net/claude-code/playwright-mcp-claude-code">playwright-mcp</a> tool in order for Claude to do its own testing in the browser, which means I have do to a lot less copy/pasting and manual interpretation of errors.</p>
+<p>When I have issues with my GitHub Actions deployment, I can even now ask Claude Code to check the errors directly using the GitHub CLI tool, which is amazing.</p>
+<p>I also had Claude Code build me automated unit tests in order to help prevent previously-resolved issues from creeping back in as I iterate on the app.</p>
+</section>
+<section id="final-thoughts-on-vibe-coding" class="level2">
+<h2 class="anchored" data-anchor-id="final-thoughts-on-vibe-coding">Final thoughts on vibe-coding</h2>
+<p>While it is truly amazing how powerful agentic coding tools like Claude Code have become, they still are not some panacea for all of the hardships of software development. To be successful, it’s critical to still be engaged in the process, know enough about the tools you are using to know what to ask for and what questions to ask, and have a healthy sense of doubt about the responses you receive. It’s important to always be thinking about the risks and security implications of what you are building. Actively put in restrictions to the tool in order to reduce your risk profile.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>It’s also clear that AI tools don’t yet have much of a sense of what looks good. If you want to go beyond function and create an app with beautiful form, there’s no replacement–yet–for taste. Not that my app will win any beauty contests any time soon, but still the point remains.</p>
+<p>Even though AI tools are taking over a lot of the manual effort of coding, I have still found that they also have rapidly advanced my own skills as a developer. I tried for years to teach myself Python with only very limited success. Then genAI came on the scene, and suddenly my fluency skyrocketed. The key is to stay curious–don’t just focus on the outcome, but stay obsessed with the “how” and “why” of what you and your AI tool are building together.</p>
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Here’s <a href="https://dailydrop.hrbrmstr.dev/2025/08/24/bonus-drop-95-2025-08-17-vibe-less-coding-vibe-ful-checking/">very comprehensive list</a> of to-dos for security to implement in your vibe-coded apps.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/lindsay\.codes");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

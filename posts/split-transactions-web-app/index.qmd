@@ -1,0 +1,214 @@
+---
+title: "Vibe-coding a Splitwise replacement"
+description: "Not a penny more for app subscriptions"
+date: "2026-01-19"
+draft: true
+image: favicon.svg
+image-alt: "Logo for this expense ledger app showing a beige dollar sign on a green background"
+categories: [ai, web app, firebase, react, vibe-coding]
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+About a year ago I took a family trip to Ireland, and we used Splitwise to keep track of shared expenses. Splitwise has been a staple of just about every trip I've been on since grad school, but like everything else on the planet, it's becoming less and less useful as more and more features are shoved behind a paywall.
+
+I got to thinking though, what is Splitwise but just a fancy spreadsheet?? I could do that! Who needs 'em! So about a year ago I started trying to build [my own web app](https://lindsayevanslee.github.io/split-transactions) replacement for Splitwise, as a foray into the world of "vibe-coding" (a phrase that makes me a little bit nauseous but I'll try to move past that for now). 
+
+## Requirements
+
+I wanted an app where you could:
+
+- Create groups to track shared expenses
+- Add transactions and split them among group members
+- Use different kinds of split types: equal, percentage, or custom ratios
+- Invite other users to join your groups
+- See who owes whom with automatic balance calculations
+- Settle up and track payment history
+
+I started off building the app with various tools: GitHub Copilot, Cursor, and Claude. I knew I wanted to use GitHub Actions and GitHub Pages for deployment, just because I have done that before and knew it worked well. But as far as building an actual web app, I'd never done that before--I'd only ever built fairly simple websites using Quarto.
+
+After prompting the tools with my requirements, they lead me to build a basic version with the tech stack:
+
+- **React 19** with **TypeScript** for type-safe UI development
+- **Vite** for lightning-fast builds and hot module replacement
+- **Material-UI (MUI)** for a polished component library
+- **Firebase Authentication** for email/password login
+- **Cloud Firestore** for real-time NoSQL database
+
+The part that was completely foreign to me the infrastructure for authentication and shared data storage. I had never heard of Firebase before, but so far it has worked well (and for free). 
+
+## Setting Up Firebase Infrastructure
+
+### 1. Create a Firebase Project
+
+1. Go to [Firebase Console](https://console.firebase.google.com)
+2. Click **"Create a project"** or **"Add project"**
+3. Enter a project name (e.g., "split-transactions")
+4. You can disable Google Analytics for now if you prefer
+5. Click **"Create project"** and wait for it to provision
+
+### 2. Enable Authentication
+
+1. In the Firebase Console, click **"Authentication"** in the left sidebar
+2. Click **"Get Started"**
+3. Click the **"Sign-in method"** tab
+4. Click on **"Email/Password"** in the provider list
+5. Toggle the **"Enable"** switch
+6. Click **"Save"**
+
+That's it for basic authentication! Firebase now handles user registration, login, password resets, and session management for you.
+
+### 3. Create Firestore Database
+
+To store data like users, groups, and transactions, you need to set up a Firestore database:
+
+1. In the Firebase Console, click **"Firestore Database"** in the left sidebar
+2. Click **"Create database"**
+3. Choose **"Start in production mode"** (we'll set up proper security rules next)
+4. Choose a location closest to your users (e.g., `us-central1` for North America, `europe-west1` for Europe)
+5. Click **"Enable"**
+
+The database will take a moment to provision. Once ready, you'll see an empty database console where you can manually add collections and documents for testing.
+
+### 4. Get Your Configuration Object
+
+Now you need to connect your app to Firebase:
+
+1. In the Firebase Console, click the **gear icon (⚙️)** next to "Project Overview"
+2. Click **"Project settings"**
+3. Scroll down to the **"Your apps"** section
+4. Click the **web icon (`</>`)**
+5. Register your app with a nickname (e.g., "split-transactions-web")
+6. You'll see a configuration object like this:
+
+```javascript
+const firebaseConfig = {
+  apiKey: "AIzaSyB...",
+  authDomain: "your-project.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abc123def456"
+};
+```
+
+Keep these values handy—you'll need them for your environment variables.
+
+### 5. Set Up Environment Variables
+
+Create a `.env` file in your project root (and add it to `.gitignore`!):
+
+```env
+VITE_FIREBASE_API_KEY=AIzaSyB...
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+VITE_FIREBASE_APP_ID=1:123456789:web:abc123def456
+```
+
+The `VITE_` prefix is required for Vite to expose these variables to your frontend code via `import.meta.env`.
+
+### 6. Add Secrets to GitHub (for CI/CD)
+
+For automated deployments, you need to add these values as GitHub secrets:
+
+1. Go to your GitHub repository
+2. Click **"Settings"** > **"Secrets and variables"** > **"Actions"**
+3. Click **"New repository secret"**
+4. Add each Firebase configuration value as a separate secret:
+   - `VITE_FIREBASE_API_KEY`
+   - `VITE_FIREBASE_AUTH_DOMAIN`
+   - `VITE_FIREBASE_PROJECT_ID`
+   - `VITE_FIREBASE_STORAGE_BUCKET`
+   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
+   - `VITE_FIREBASE_APP_ID`
+
+Your GitHub Actions workflow can then reference these as `${{ secrets.VITE_FIREBASE_API_KEY }}`, etc.
+
+
+### 7. Set Up Firestore Security Rules
+
+Firestore Security Rules are server-side access controls that determine who can read, write, update, and delete data in your database. They're written in a declarative language and evaluated by Firebase's servers—not your client code—so they can't be bypassed by malicious users.
+
+Without rules (or with overly permissive rules), anyone could:
+
+- Read all your users' data
+- Modify or delete any document
+- Create spam or malicious content
+
+Rules are essential for any production app.
+
+You can edit rules in the Firebase Console, but you can also manage them via code in your repository. This is what the AI tools help me set up:
+
+1. **Create a `firestore.rules` file** in your project root. Here is a snippet:
+
+```javascript
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Helper function to check if user is the owner of a group
+    function isGroupOwner(groupId) {
+      return isAuthenticated() &&
+             get(/databases/$(database)/documents/groups/$(groupId)).data.userId == request.auth.uid;
+    }
+
+    // Helper function to check if user is a member of a group
+    function isGroupMember(groupId) {
+      return isAuthenticated() &&
+             request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.memberUserIds;
+    }
+  }
+}
+```
+
+2. **Configure `firebase.json`** to reference your rules file:
+
+```json
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
+```
+
+3. **Deploy rules** using the Firebase CLI:
+
+```bash
+firebase deploy --only firestore:rules
+```
+
+
+## Iterating
+
+When I first started building this app about a year ago, I struggled quite a bit to get things working well. At the time, these coding tools were less advanced and automated than they are now, so it still involved a lot of copy/pasting and manual testing. The AI couldn't directly see the results of what it built. I also would experience issues where my local dev deployment would work differently than the version deployed via GitHub Actions. 
+
+I got a very basic version of the app set up, it still had bugs, so I left it for awhile. But recently people seem to be having technological epiphanies using Claude Code, so in the past few days I decided to dive back in and see if I can get the app in a more polished state.
+
+This will be surprising to no one, but these days Claude Code is so much more autonomous and better able to recognize and fix issues as they arise. I even integrated the [playwright-mcp](https://til.simonwillison.net/claude-code/playwright-mcp-claude-code) tool in order for Claude to do its own testing in the browser, which means I have do to a lot less copy/pasting and manual interpretation of errors.
+
+When I have issues with my GitHub Actions deployment, I can even now ask Claude Code to check the errors directly using the GitHub CLI tool, which is amazing. 
+
+I also had Claude Code build me automated unit tests in order to help prevent previously-resolved issues from creeping back in as I iterate on the app.
+
+
+## Final thoughts on vibe-coding
+
+While it is truly amazing how powerful agentic coding tools like Claude Code have become, they still are not some panacea for all of the hardships of software development. To be successful, it's critical to still be engaged in the process, know enough about the tools you are using to know what to ask for and what questions to ask, and have a healthy sense of doubt about the responses you receive. It's important to always be thinking about the risks and security implications of what you are building. Actively put in restrictions to the tool in order to reduce your risk profile.[^1]
+
+It's also clear that AI tools don't yet have much of a sense of what looks good. If you want to go beyond function and create an app with beautiful form, there's no replacement--yet--for taste. Not that my app will win any beauty contests any time soon, but still the point remains.
+
+Even though AI tools are taking over a lot of the manual effort of coding, I have still found that they also have rapidly advanced my own skills as a developer. I tried for years to teach myself Python with only very limited success. Then genAI came on the scene, and suddenly my fluency skyrocketed. The key is to stay curious--don't just focus on the outcome, but stay obsessed with the "how" and "why" of what you and your AI tool are building together.
+
+
+
+[^1]: Here's [very comprehensive list](https://dailydrop.hrbrmstr.dev/2025/08/24/bonus-drop-95-2025-08-17-vibe-less-coding-vibe-ful-checking/) of to-dos for security to implement in your vibe-coded apps. 
