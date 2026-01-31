@@ -217,6 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#iterating" id="toc-iterating" class="nav-link" data-scroll-target="#iterating">Iterating</a></li>
   <li><a href="#final-thoughts-on-vibe-coding" id="toc-final-thoughts-on-vibe-coding" class="nav-link" data-scroll-target="#final-thoughts-on-vibe-coding">Final thoughts on vibe-coding</a></li>
+  <li><a href="#update-2026-01-30-oops-nearly-vibe-coded-my-way-into-a-security-incident" id="toc-update-2026-01-30-oops-nearly-vibe-coded-my-way-into-a-security-incident" class="nav-link" data-scroll-target="#update-2026-01-30-oops-nearly-vibe-coded-my-way-into-a-security-incident">Update 2026-01-30: oops! nearly vibe-coded my way into a security incident</a></li>
   </ul>
 </nav>
     </div>
@@ -402,6 +403,11 @@ VITE_FIREBASE_APP_ID=1:123456789:web:abc123def456</code></pre>
 <p>While it is truly amazing how powerful agentic coding tools like Claude Code have become, they still are not some panacea for all of the hardships of software development. To be successful, it’s critical to still be engaged in the process, know enough about the tools you are using to know what to ask for and what questions to ask, and have a healthy sense of doubt about the responses you receive. It’s important to always be thinking about the risks and security implications of what you are building. Actively put in restrictions to the tool in order to reduce your risk profile.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>It’s also clear that AI tools don’t yet have much of a sense of what looks good. If you want to go beyond function and create an app with beautiful form, there’s no replacement–yet–for taste. Not that my app will win any beauty contests any time soon, but still the point remains.</p>
 <p>Even though AI tools are taking over a lot of the manual effort of coding, I have still found that they also have rapidly advanced my own skills as a developer. I tried for years to teach myself Python with only very limited success. Then genAI came on the scene, and suddenly my fluency skyrocketed. The key is to stay curious–don’t just focus on the outcome, but stay obsessed with the “how” and “why” of what you and your AI tool are building together.</p>
+</section>
+<section id="update-2026-01-30-oops-nearly-vibe-coded-my-way-into-a-security-incident" class="level2">
+<h2 class="anchored" data-anchor-id="update-2026-01-30-oops-nearly-vibe-coded-my-way-into-a-security-incident">Update 2026-01-30: oops! nearly vibe-coded my way into a security incident</h2>
+<p>A couple days ago I read <a href="https://www.404media.co/massive-ai-chat-app-leaked-millions-of-users-private-conversations/?ref=daily-stories-newsletter">this story</a> from 404 Media about a recent massive data leak related to a misconfiguration with an app’s Google Firebase, and I thought, “yikes I should probably check that on my app.” I opened up Claude Code, pasted this news article link, and asked it to check whether I have the same issue. Sure enough, it says, yes, I do, and I better fix it.</p>
+<p>We quickly resolved the issue by adding additional Firestore rules that ensure authenticated users can only access data in the groups that they belong to. This is just one small example that goes to show there is still no substitute for true knowledge of your tech stack, and these AI tools will still do you wrong even if you ask them nicely not to.</p>
 
 
 </section>
