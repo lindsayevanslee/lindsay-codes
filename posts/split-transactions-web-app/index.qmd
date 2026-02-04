@@ -2,7 +2,6 @@
 title: "Vibe-coding a Splitwise replacement"
 description: "Not a penny more for app subscriptions"
 date: "2026-01-19"
-draft: true
 image: favicon.svg
 image-alt: "Logo for this expense ledger app showing a beige dollar sign on a green background"
 categories: [ai, web app, firebase, react, vibe-coding]
