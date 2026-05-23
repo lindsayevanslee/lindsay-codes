@@ -2,7 +2,6 @@
 title: "Get started with uv"
 description: "I uv it! (to the tune of Icona Pop)"
 date: "2026-05-23"
-draft: true
 image: uv.png
 image-alt: "uv logo: bright pink blocky 'u' on a dark purple background"
 categories: [uv, python, workflow]
