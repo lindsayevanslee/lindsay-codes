@@ -1,0 +1,81 @@
+---
+title: "Get started with uv"
+description: "I uv it! (to the tune of Icona Pop)"
+date: "2026-05-23"
+draft: true
+image: uv.png
+image-alt: "uv logo: bright pink blocky 'u' on a dark purple background"
+categories: [uv, python, workflow]
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+Just as soon as I finally got around to [getting acquainted with conda](../get-started-with-conda/index.qmd), I saw there was a new kid on the block for python environment management: [`uv`](https://astral.sh/uv/). I got the first inkling I needed to get on the `uv` train when I saw Vicki Boykis--a favorite tech writer and overall thoughtful and interesting person--say in her [2024 year-end review](https://vickiboykis.com/2025/01/03/everything-i-did-in-2024/) that she "moved to `uv`...and have never looked back." The memes on Bluesky have reinforced the message over the months:
+
+{{< bsky "https://bsky.app/profile/khakhalin.bsky.social/post/3mkkj57pvsk2b" >}}
+
+I've only just begun working with `uv` but so far the hype feels real--it is fast and easy to use, and has made working with packages as seamless as it's ever been for me. Here is a quick reference guide to getting started with `uv` and some resources for learning more.
+
+# Quick guide
+
+## Why `uv`?
+
+-   Super fast: 10-100x faster than `pip`
+-   Comprehensive: projects, dependencies, virtualenvs, Python versions, and tools in one binary
+-   Reproducible: `uv.lock` pins exact versions for everyone who uses your code
+-   Lightweight: no need to install a full heavyweight tools like `conda`
+-   Streamlined: no need to explicitly activate environments or manually create `venv`s
+
+## Install
+
+``` bash
+# macOS / Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# or with Homebrew
+brew install uv
+```
+
+## Start a project
+
+``` bash
+uv init myproject      # create a new project (pyproject.toml, .venv, etc.)
+cd myproject
+```
+
+Note that `uv init` also automatically creates a `git` repo by default.
+
+## Manage dependencies
+
+``` bash
+uv add requests        # add a dependency
+uv add --dev pytest    # add a dev-only dependency
+uv remove requests     # remove a dependency
+uv sync                # install everything from pyproject.toml / uv.lock
+```
+
+`uv` automatically creates and manages a `.venv` for you, and it doesn't need to be activated manually.
+
+## Run code
+
+``` bash
+uv run main.py         # run a script inside the project environment
+uv run pytest          # run a tool inside the environment
+```
+
+## Manage Python versions
+
+``` bash
+uv python install 3.12   # install a specific Python
+uv python pin 3.12       # pin this project to a Python version
+```
+
+# Resources
+
+[Astral's blog](https://astral.sh/blog/uv) launching `uv`
+
+[Datacamp's in-depth tutorial](https://www.datacamp.com/tutorial/python-uv)
+
+["Python Packaging is Great Now: `uv` is all you need"](https://dev.to/astrojuanlu/python-packaging-is-great-now-uv-is-all-you-need-4i2d) by Juan Luis Cano Rodríguez
