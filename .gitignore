@@ -47,3 +47,7 @@ vignettes/*.pdf
 # Draft posts
 drafts/
 
+# Python virtual environment
+venv/
+.venv/
+

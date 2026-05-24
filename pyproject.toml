@@ -1,0 +1,14 @@
+[project]
+name = "lindsay-codes"
+version = "0.1.0"
+description = "Python environment for rendering Shinylive apps embedded in the Quarto site"
+requires-python = ">=3.13"
+dependencies = [
+    "shiny==1.2.1",
+    "shinylive==0.7.3",
+]
+
+[tool.uv]
+# This project is just an environment for `quarto render`, not a distributable
+# package, so don't try to build/install the repo itself.
+package = false
