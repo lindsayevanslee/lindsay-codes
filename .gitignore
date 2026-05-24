@@ -51,3 +51,8 @@ drafts/
 venv/
 .venv/
 
+# VS Code: ignore personal settings, keep shared project config
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+

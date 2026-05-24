@@ -1,0 +1,11 @@
+{
+  // Point the editor at the uv-managed virtual environment. This makes the
+  // integrated terminal auto-activate .venv, so plain `quarto render` /
+  // `quarto preview` use the pinned shinylive (0.9.3) instead of conda's
+  // base shinylive (0.10.6) that sits on the system PATH.
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+  // Auto-activate the selected interpreter whenever a new integrated
+  // terminal opens (this is VS Code's default; set explicitly for clarity).
+  "python.terminal.activateEnvironment": true
+}
