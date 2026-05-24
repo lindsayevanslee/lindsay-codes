@@ -1,0 +1,106 @@
+---
+title: "Code snippets 2.0"
+description: "Define once, use everywhere"
+date: "2026-05-24"
+image: code.png
+image-alt: "Colorful icon representing code"
+categories: [ide, r, quarto, workflow]
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+I've been using [RStudio](https://posit.co/products/open-source/rstudio/) less and less lately as python and all things LLMs have taken over my life. Most of my coding time is spent in [VS Code](https://code.visualstudio.com/), and sometimes in RStudio's younger hotter cousin [Positron](https://posit.co/products/positron/), which--even though it's built on the same foundation as VS Code--I still find is easier to use with R.
+
+I've missed my beloved [RStudio code snippets](../rstudio-code-snippets/index.qmd) and wanted to see if I could replicate that functionality in my new IDEs. But beyond that, I wanted to make it so I only need to maintain one snippet file that can be used across both VS Code and Positron.
+
+To create code snippets in VS Code, go to Settings -\> Configure Snippets -\> New Global Snippets file, then give the file a name. This will open a new snippets file template: `~/Library/Application Support/Code/User/snippets/<your-snippet-file>.code-snippets`
+
+Here is an example of a couple of my favorite snippets formatted in this new file:
+
+``` json
+{
+    "header": {
+        "scope": "r",
+        "prefix": "header",
+        "body": [
+            "## ------------------------------------------------------ ##",
+            "##",
+            "## Purpose of script: ${1:purpose}",
+            "##",
+            "## Author: Lindsay Lee",
+            "## Email: me@lindsayevanslee.com",
+            "##",
+            "## Date Created: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE",
+            "##",
+            "##",
+            "## ------------------------------------------------------ ##",
+            "##",
+            "## Notes:",
+            "##    - ${2:note}",
+            "##",
+            "##",
+            "## ------------------------------------------------------ ##",
+            "",
+            "",
+            "",
+            "## setup --------------------------------",
+            "",
+            "",
+            "",
+            "## read data ----------------------------",
+            "",
+            "",
+            "",
+            "## wrangle data -------------------------",
+            "",
+            "",
+            "",
+            "## print output -------------------------",
+            "$0"
+        ],
+        "description": "Insert a standard script header with purpose, author, date, notes, and section dividers"
+    },
+    "post": {
+        "scope": "quarto",
+        "prefix": "post",
+        "body": [
+            "---",
+            "title: \"\"",
+            "description: \"\"",
+            "date: \"\"",
+            "draft: true",
+            "#image:",
+            "image-alt: \"\"",
+            "categories: []",
+            "jupyter: python3",
+            "engine: knitr",
+            "execute:",
+            "    eval: false",
+            "---"
+        ],
+        "description": "Quarto blog post YAML front matter"
+    }
+}
+```
+
+Now here's the best part! We can create a symlink in the corresponding snippets folder for the Positron app so that it uses the same snippet file as VS Code. This way, any updates to the snippets will be reflected in both IDEs without having to maintain separate files. You can create the symlink with:
+
+```{bash}
+set -e
+CODE_DIR="<homedir>/Library/Application Support/Code/User/snippets"
+POS_DIR="<homedir>/Library/Application Support/Positron/User/snippets"
+
+# Point Positron at the VS Code copy via symlink
+ln -s "$CODE_DIR/snippets.code-snippets" "$POS_DIR/snippets.code-snippets"
+
+echo "=== VS Code folder (real file) ==="
+ls -la "$CODE_DIR"
+echo "=== Positron folder (symlink) ==="
+ls -la "$POS_DIR"
+```
+
+You can edit the file in either place and the changes will sync.
+
+It's the little things that make life sweet.
