@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/macos-notifications/index.html",
       "/posts/more-code-snippets/index.html",
       "/posts/get-started-with-uv/index.html",
       "/posts/split-transactions-web-app/index.html",

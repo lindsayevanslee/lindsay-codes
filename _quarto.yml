@@ -33,8 +33,6 @@ format:
 resources:
   - CNAME
 
-editor: visual
-
 # Include both posts and drafts directories
 posts:
   - posts/
