@@ -11,7 +11,13 @@ execute:
     eval: false
 ---
 
-For the past several weeks I've noticed that many of the Github Actions I have running on a schedule have been running hours (!) behind. A quick google shows that [many other people are complaining](https://github.com/orgs/community/discussions/156282) about this too, and there's not really any solution other than taking your cron jobs elsewhere. I saw a few people suggest [cron-job.org](https://cron-job.org/) as a third-party alternative, so I gave it a try. It was super easy to set up and is totally free!
+For the past several weeks I've noticed that many of the Github Actions I have running on a schedule have been running hours (!) behind. As an example, here you can see the delays in the scheduled workflow powering my [Belcourt showtimes screen](../webscraping-showtimes/index.qmd):
+
+![](spider_delay.png){fig-alt="Screenshot of GitHub Actions run history for the Belcourt showtimes workflow, showing scheduled run delays getting exponentially worse starting around February 2026."}
+
+In February, the delays start growing practically exponentially. In May, I tried updating the schedule so it runs at the 7th minute instead of top of the hour to try to avoid the back-up that can occur at the 0th minute, but it made no difference.
+
+A quick google shows that [many other people are complaining](https://github.com/orgs/community/discussions/156282) about this too, and there's not really any solution other than taking your cron jobs elsewhere. I saw a few people suggest [cron-job.org](https://cron-job.org/) as a third-party alternative, so I gave it a try. It was super easy to set up and is totally free!
 
 # Step 1: Create a Github Personal Access Token
 
