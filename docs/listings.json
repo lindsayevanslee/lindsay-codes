@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/claude-code-for-3d-printing/index.html",
       "/posts/cron-job-dot-org/index.html",
       "/posts/macos-notifications/index.html",
       "/posts/more-code-snippets/index.html",
