@@ -1,0 +1,60 @@
+---
+title: "Automated security audits for my Splitwise replacement app"
+description: "Please don't hack me"
+date: "2026-10-11"
+image: ledgr-security.png
+image-alt: "Logo for this expense ledger app showing a beige dollar sign on a green background, with a padlock on top of it"
+categories: [ai, web app, security, github, vibe-coding]
+jupyter: python3
+engine: knitr
+execute:
+    eval: false
+---
+
+[A few months ago](../split-transactions-web-app/index.qmd) I developed a [web app](https://lindsayevanslee.github.io/split-transactions) for tracking transactions and settling balances in a group, a la Splitwise. We just took it on its maiden voyage on a family trip, and I have to say it performed quite well. A few little bugs on the way, which I was able to get Claude Code to help me fix from my phone (maybe I need to write a post about this too...)
+
+This new world where basically anyone can make any app they want is cool and all, but it's also a bit terrifying, and though I'm certainly no security expert, I know enough to know I don't know enough to fully protect myself from vibe-coding my way into oblivion. I've tried to do the basic things like ensuring Claude gets the minimal permissions it needs to do its job, baking security topics into its system instructions and the instructions of any prompts or skills I use, and constantly interrogating it about the security of what it's doing. This has been helpful and I'm learning a lot along the way, but it's certainly not enough. 
+
+This web app is the most complex and vulnerable I've made, incorporating data storage and identity management, and relies on many npm packages which are constantly flagged with vulnerabilities. I wanted to be extra careful and try to automate the addressing of vulnerabilities as much as possible.
+
+# Security components 
+
+Here are the main security components I am working with currently:
+
+1. [GitHub Dependabot](https://docs.github.com/en/code-security/tutorials/secure-your-dependencies/dependabot-quickstart#enabling-dependabot-for-your-repository): this is the most basic, "out of the box" security functionality, which I try to use on all my repositories. it scans your repo regularly for reported vulnerabilities and can open pull requests to address them. I have made some edits to the `.github/dependabot.yml` workflow config file for it to create the PRs for me to review.
+2. Security audit workflow (`.github/workflows/security-audit.yml`): this is a GitHub Actions workflow that runs every 12 hours and runs various checks:
+
+    - Installs dependencies exactly as locked, with `npm ci --ignore-scripts`
+    - Checks that each package was really published by its owner (`npm audit signatures`). It records npm’s exit code, so invalid signatures, missing signatures and “couldn’t check at all” all count as failures.
+    - Runs `npm audit`, then a fix script (`.github/scripts/add-audit-overrides.js`), then rebuilds the lockfile. The fix script does the following:
+        - Direct dependencies get a version upgrade. Indirect dependencies get forced to a safe version through overrides.
+        - Versions are pinned exactly, with no `^` or `~` ranges.
+        - It never jumps a major version. Fixes that need one are listed for me to review and handle myself.
+        - It only picks versions that actually exist on the npm registry, and never betas or other prereleases.
+        - When it can’t work out a safe fix, it skips the package and says why.
+        - When the vulnerable package has no fixed release at all, it can’t help. npm’s own fix in that case is to upgrade the parent package, which the script doesn’t try.
+    - Opens or updates one PR on a branch named `security/audit-fixes-<date>` if anything changed. The PR description lists the fixes, what couldn’t be fixed and why, and the signature results.
+
+3. Claude Code Routine for implementing fixes: [Routines](https://code.claude.com/docs/en/routines) are a fairly new functionality from Claude Code for performing automations on your behalf. I configured this in my local Claude app and connected it to my repository. It does the following:
+
+    - Listens for new PRs in the repo, and then acts on ones related to security audits. The PR must be open, not a draft, on a `security/audit-fixes` branch, authored by the audit app, and not from a fork. 
+    - Checks the PR: it runs install, build, tests and lint, and compares lint results against `main`.
+    - It approves proposed changes only if all five conditions pass:
+        1.  the app’s build and tests pass, with no new lint errors
+        2.  the functions build passes
+        3.  every change is a patch-level bump
+        4.  no advisories are left unfixed
+        5. signatures were verified for both projects (added today)
+    - If all five pass: it approves the PR, turns on squash auto-merge (which waits for required checks), adds the auto-approved label and posts a summary.
+    - Otherwise: it adds a `needs-human-review` label and explains why.
+    - It leaves version choices alone. It only pushes small fixes such as regenerating a lockfile, and never changes which versions are pinned.
+
+# Conclusion
+
+This workflow helps catch the little things, which honestly for a small app like this that doesn't really incorporate any sensitive data, probably represents more of a learning opportunity and quality-of-life improvement for me and less of an actually critical security solution. 
+
+It still has some major issues: it depends almost entirely on reported vulnerabilties, but we know more and more lately security issues are happening quicker than they can be reported. We know that not updating your packages regularly can cause security holes, but these days we also know that automatically updating packages can come with its own level of risk because of this reporting lag. With this solution I try to find a happy medium where I'm pinning all package versions exactly, automatically updating small changes and leaving bigger changes for human review. 
+
+In reality, I don't know enough to do a proper human review of those big changes. What I really need is another tool that can perform a genuine security review for each PR, reviewing not just reported vulnerabilties but doing its own digging in the source to find malicious code itself. Tools like this are out there, and that may be the next thing I look in to. But then of course that begs the question, how do I know the security tool itself isn't compromised? Who reviews the reviewer? Who watches the watcher?
+
+In conclusion: 🫠
